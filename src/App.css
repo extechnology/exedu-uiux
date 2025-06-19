@@ -45,3 +45,11 @@ body {
 .animate-jelly {
   animation: jelly 0.6s ease;
 }
+
+
+@media (min-width: 1450px) {
+  .hero {
+    top: 21%;
+    left: 29%;
+  }
+}
