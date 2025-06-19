@@ -12,8 +12,9 @@ function ConfirmCareer() {
             Confirm your career in the <br /> Digital & Technology Profession.
           </h1>
           <p
-            data-aos="fade-in"
             className="text-justify md:w-[90%] text-md px-5 md:px-0"
+            data-aos="fade-up"
+            data-aos-duration="1100"
           >
             At exedu, we help you confidently build a career in the digital and
             technology professions. Our specialized courses in Digital
@@ -29,13 +30,13 @@ function ConfirmCareer() {
           data-aos="zoom-in"
           className="md:w-1/3 flex md:justify-end px-5 md:px-0 pt-5 md:pt-0"
         >
-            <img
-              src="/digitech_profession.jpg"
-              alt="no image"
-              width={350}
-              height={300}
-              className="rounded-4xl md:w-[80%] mx-auto"
-            />
+          <img
+            src="/digitech_profession.jpg"
+            alt="no image"
+            width={350}
+            height={300}
+            className="rounded-4xl md:w-[80%] mx-auto"
+          />
         </div>
       </div>
     </div>

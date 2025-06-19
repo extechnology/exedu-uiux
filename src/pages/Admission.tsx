@@ -91,7 +91,7 @@ export default function Admission() {
         </div>
 
         {/* Right Side - Robot Image */}
-        <div className="w-full md:w-1/2 bg-black md:rounded-r-xl md:rounded-l-none rounded-xl flex items-center justify-center">
+        <div className="w-full md:w-1/2  md:rounded-r-xl md:rounded-l-none rounded-xl flex items-center justify-center">
           {/* <div className="absolute bottom-90 right-40 w-28 h-28 bg-purple-500 blur-3xl rounded-full opacity-30 z-1" /> */}
 
           <img

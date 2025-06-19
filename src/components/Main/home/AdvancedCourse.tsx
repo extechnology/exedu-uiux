@@ -47,7 +47,11 @@ const AdvancedCourse = () => {
   return (
     <div className="bg-gradient-to-b from-gray-100 to-white">
       <div className="max-w-6xl mx-auto text-center">
-        <h1 className="text-center md:text-4xl text-xl font-bold py-10">
+        <h1
+          className="text-center md:text-4xl text-xl font-bold py-10"
+          data-aos="zoom-in"
+          data-aos-duration="900"
+        >
           OUR ADVANCED COURSES
         </h1>
         <div className="relative">
@@ -73,15 +77,25 @@ const AdvancedCourse = () => {
 
               {/* Text Overlay */}
               <div className="absolute top-0 left-0 w-full h-full  bg-opacity-50 flex flex-col justify-center items-center text-white p-4">
-                <h2 className="text-xl md:text-3xl font-bold mb-4 w-[90%]">
+                <h2
+                  className="text-xl md:text-3xl font-bold mb-4 w-[90%]"
+                  data-aos="zoom-in"
+                  data-aos-duration="1200"
+                >
                   {course.title}
                 </h2>
-                <p className="mb-6 text-sm md:text-xl font-semibold">
+                <p
+                  className="mb-6 text-sm md:text-xl font-semibold"
+                  data-aos="zoom-in"
+                  data-aos-duration="1300"
+                >
                   {course.description}
                 </p>
                 <button
                   type="button"
                   className="text-sm bg-gradient-to-r from-fuchsia-500 to-violet-600  text-white font-bold px-8 py-3 rounded-lg md:text-xl hover:bg-gray-200"
+                  data-aos="zoom-in-up"
+                  data-aos-duration="1500"
                 >
                   Apply Now
                 </button>

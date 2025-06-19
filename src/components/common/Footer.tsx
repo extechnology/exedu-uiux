@@ -48,12 +48,18 @@ const Footer: React.FC = () => {
           <h1 className="font-medium text-xl">Follow Us</h1>
           <ul className="flex space-x-5 pt-4">
             <li>
-              <Link target="_blank" to="https://www.instagram.com/exedu.in?igsh=bnFpeDk5b2tucWZq">
+              <Link
+                target="_blank"
+                to="https://www.instagram.com/exedu.in?igsh=bnFpeDk5b2tucWZq"
+              >
                 <FaInstagram className="w-6 h-6" />
               </Link>
             </li>
             <li>
-              <Link target="_blank" to="https://www.facebook.com/profile.php?id=61573566939195">
+              <Link
+                target="_blank"
+                to="https://www.facebook.com/profile.php?id=61573566939195"
+              >
                 <FaFacebook className="w-6 h-6" />
               </Link>
             </li>
@@ -68,12 +74,18 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link target="_blank" to="https://www.linkedin.com/company/exedus/">
+              <Link
+                target="_blank"
+                to="https://www.linkedin.com/company/exedus/"
+              >
                 <FaLinkedin className="w-6 h-6" />
               </Link>
             </li>
             <li>
-              <Link target="_blank" to="https://in.pinterest.com/exedu_/_profile/">
+              <Link
+                target="_blank"
+                to="https://in.pinterest.com/exedu_/_profile/"
+              >
                 <FaPinterest className="w-6 h-6" />
               </Link>
             </li>
@@ -97,7 +109,7 @@ const Footer: React.FC = () => {
           <div className="">
             {/* <img src="/EX_TECHNOLOGY_LOGO-01.png" alt="" height={70} width={70} /> */}
             <p className="text-sm font-light text-gray-300">
-              Our Parent Company is exmedia
+              Our Parent Company is <span className="font-bold pl-1">exmedia</span>
             </p>
           </div>
           <div className="relative flex md:justify-center">
@@ -106,7 +118,7 @@ const Footer: React.FC = () => {
               onMouseEnter={() => setShowPopup(true)}
               onMouseLeave={() => setShowPopup(false)}
             >
-              Copyright &copy; 2023 ExEdu. All rights reserved.
+              Copyright &copy; 2025 exedu. All rights reserved.
             </p>
 
             <AnimatePresence>

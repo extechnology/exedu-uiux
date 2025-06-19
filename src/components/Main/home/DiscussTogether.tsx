@@ -6,12 +6,18 @@ const DiscussTogether = () => {
 
       {/* Text Content */}
       <div className="absolute inset-0 z-10 md:flex justify-between content-center items-center max-w-7xl mx-auto px-6 text-white">
-        <h1 className="md:text-4xl text-2xl font-bold md:w-[50%] pb-6 md:pb-0">
+        <h1
+          className="md:text-4xl text-2xl font-bold md:w-[50%] pb-6 md:pb-0"
+          data-aos="zoom-in"
+          data-aos-duration="1200"
+        >
           Let's Discuss About How We Can Help Make Your Career Better
         </h1>
         <button
           type="button"
           className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white text-sm font-bold px-8 py-2 rounded-xl"
+          data-aos="zoom-in"
+          data-aos-duration="1200"
         >
           Let's Discuss Together
         </button>
