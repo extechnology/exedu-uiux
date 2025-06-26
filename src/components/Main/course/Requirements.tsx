@@ -20,7 +20,7 @@ const Requirements = () => {
             className="w-full md:w-4/5 mx-auto"
           />
         </div>
-        <div className="md:w-1/2 mx-auto content-center  pl-5 pt-5 md:pl-0 md:pt-0">
+        <div className="md:w-1/2 mx-auto content-center  pl-4 pt-5 md:pl-0 md:pt-0">
           <ul className="space-y-3">
             {items.map((item, index) => (
               <li
