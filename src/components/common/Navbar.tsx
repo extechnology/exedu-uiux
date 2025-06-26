@@ -59,10 +59,12 @@ const Navbar = () => {
           onMouseEnter={() => setShowProfileMenu(true)}
           onMouseLeave={() => setShowProfileMenu(false)}
         >
-          <div className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
-            <User className="mr-2 w-5" />
-            Profile
-          </div>
+          <Link to={"/no-account"}>
+            <div className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
+              <User className="mr-2 w-5" />
+              Profile
+            </div>
+          </Link>
 
           <AnimatePresence>
             {showProfileMenu && (

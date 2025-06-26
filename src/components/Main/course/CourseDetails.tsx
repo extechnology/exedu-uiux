@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Details = [
   {
     id: 1,
@@ -5,8 +7,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
   {
     id: 2,
@@ -14,8 +15,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet  consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
   {
     id: 3,
@@ -23,8 +23,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
   {
     id: 4,
@@ -32,8 +31,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
   {
     id: 5,
@@ -41,8 +39,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
   {
     id: 6,
@@ -50,8 +47,7 @@ const Details = [
     duration: "3 Months Course + Internship",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam , .",
-    image:
-      "/digital_marketing.jpg",
+    image: "/digital_marketing.jpg",
   },
 ];
 
@@ -88,7 +84,7 @@ const CourseDetails = () => {
                 title="Apply Now"
                 className="relative items-center text-md bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-lg border-2 px-8 py-2 shadow border-gray-300 font-semibold text-white overflow-hidden group transform transition-all duration-500 ease-out animate-jelly"
               >
-                Apply Now
+                <Link to="/single">Apply Now</Link>
                 {/* Shiny sweep */}
                 <span className="absolute left-[-100%] top-0 h-full w-1/3 transform skew-x-[-20deg] bg-gradient-to-r from-transparent to-white/60  animate-shimmer group-hover:animate-shimmer"></span>
               </button>

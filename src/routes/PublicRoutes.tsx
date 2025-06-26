@@ -9,6 +9,8 @@ const Course = lazy(() => import("../pages/Courses"));
 const Admission = lazy(() => import("../pages/Admission"));
 const PrivacyPolicy = lazy(() => import("../pages/Privacy"));
 const Terms = lazy(() => import("../pages/Terms"));
+const CourseSingle = lazy(() => import("../pages/CourseSinglePage"));
+const NoAccount = lazy(() => import("../pages/NoAccount"));
 
 const PublicRoutes = () => (
   <>
@@ -17,6 +19,8 @@ const PublicRoutes = () => (
       <Route path="/about" element={<About />} />
       <Route path="/course" element={<Course />} />
       <Route path="/admission" element={<Admission />} />
+      <Route path="/single" element={<CourseSingle />} />
+      <Route path="/no-account" element={<NoAccount />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
     </Route>

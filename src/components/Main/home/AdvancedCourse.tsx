@@ -93,11 +93,12 @@ const AdvancedCourse = () => {
                 </p>
                 <button
                   type="button"
-                  className="text-sm bg-gradient-to-r from-fuchsia-500 to-violet-600  text-white font-bold px-8 py-3 rounded-lg md:text-xl hover:bg-gray-200"
+                  className="relative group overflow-hidden text-sm md:text-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white font-bold px-8 py-3 rounded-lg"
                   data-aos="zoom-in-up"
                   data-aos-duration="1500"
                 >
                   Apply Now
+                  <span className="absolute top-0 left-[-40%] w-1/3 h-full bg-gradient-to-r from-transparent via-white/60 to-transparent transform skew-x-[-20deg] animate-shimmer group-hover:animate-shimmer"></span>
                 </button>
               </div>
             </div>
