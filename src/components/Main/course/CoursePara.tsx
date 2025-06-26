@@ -1,15 +1,15 @@
 const CoursePara = () => {
   return (
     <div className="max-w-6xl mx-auto py-8 ">
-      <h1 className="text-3xl md:text-4xl font-bold text-center">
+      <h1 className="text-2xl md:text-4xl font-bold text-center">
         Graphic Design
       </h1>
       <div className="md:flex gap-6 py-5">
         <div className="md:w-1/3">
-          <img src="/about.jpg" alt="" className="" />
+          <img src="/about.jpg" alt="" className="px-5 md:px-0" />
         </div>
         <div className="content-center md:w-2/3">
-          <p className="text-justify">
+          <p className="text-justify px-5 md:px-0 pt-5">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
             nesciunt, quia maiores assumenda neque soluta facere nostrum omnis
             odit magni quasi eos nisi. Sequi cum quae deserunt nesciunt, aliquam

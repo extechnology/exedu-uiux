@@ -16,7 +16,7 @@ const EnquireForm = () => {
       </div>
 
       {/* Right Section - Form */}
-      <div className="bg-white shadow-md rounded-md p-8 w-full max-w-md mx-auto">
+      <div className="bg-white shadow-md rounded-md p-8 w-full max-w-md mx-auto mb-10 md:mb-0">
         <form className="space-y-4">
           <label htmlFor="name">Name</label>
           <input

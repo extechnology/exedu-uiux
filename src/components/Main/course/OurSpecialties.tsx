@@ -7,8 +7,8 @@ const Specialties = [
 
 const OurSpecialties = () => {
   return (
-    <div>
-      <div className="max-w-2xl mx-auto  shadow-[0_6px_12px_#fbcfe8] py-20 my-12 rounded">
+    <div className="px-4 md:px-0">
+      <div className="max-w-2xl mx-auto  shadow-[0_6px_12px_#fbcfe8] md:py-20 py-10 my-12 rounded">
         <h1 className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500 md:text-4xl font-bold text-center">
           Our Specialties
         </h1>

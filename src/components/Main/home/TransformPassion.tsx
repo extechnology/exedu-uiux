@@ -5,7 +5,7 @@ const TransformPassion = () => {
         <div className=" md:flex xl:block gap-10 justify-center md:py-4 xl:py-0">
           <div className="flex gap-5">
             <div
-              className="xl:w-1/3 h-[20px] bg-fuchsia-500 transform xl:translate-y-37"
+              className="xl:w-1/3 h-[20px] bg-fuchsia-500 transform xl:translate-y-37 "
               data-aos="zoom-in"
               data-aos-duration="1000"
             ></div>
@@ -36,7 +36,7 @@ const TransformPassion = () => {
             </div>
           </div>
         </div>
-        <div className="content-center">
+        <div className="content-center pt-5 md:pt-0">
           <h1
             className="xl:text-5xl md:text-3xl text-xl font-bold md:pb-6"
             data-aos="zoom-in"
