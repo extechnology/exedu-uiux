@@ -1,14 +1,13 @@
 const Hero = () => {
   return (
     <div>
-      <div>
-        <img
-          src="/hero.jpg"
-          alt=""
-          className="xl:h-auto h-screen w-full"
-        />
+      <div className="hidden md:block">
+        <img src="/hero.jpg" alt="" className="xl:h-auto h-screen w-full" />
         <div className="absolute hero top-[30%] md:left-[15%] xl:left-[15%] pl-4 md:pl-0  text-white">
-          <h1 className="xl:text-7xl md:text-4xl text-3xl font-bold " data-aos="zoom-in-up">
+          <h1
+            className="xl:text-7xl md:text-4xl text-3xl font-bold "
+            data-aos="zoom-in-up"
+          >
             Kerala's Leading <br /> Hybrid Education
             <br /> Platform
           </h1>
@@ -24,7 +23,10 @@ const Hero = () => {
           </button>
         </div>
       </div>
+      <div className="block md:hidden">
+        <img src="/hero-mobile.jpg" alt=""  />
+      </div>
     </div>
   );
-}
-export default Hero
+};
+export default Hero;
