@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 // import { FaUserCircle } from "react-icons/fa";
 import { User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const handleDoubleClick = () => {
+    navigate("/profile");
+  }
 
   useEffect(() => {
     const close = () => setShowMobileMenu(false);
@@ -59,7 +64,7 @@ const Navbar = () => {
           onMouseEnter={() => setShowProfileMenu(true)}
           onMouseLeave={() => setShowProfileMenu(false)}
         >
-          <Link to={"/no-account"}>
+          <Link to={"/no-account"} onDoubleClick={handleDoubleClick} >
             <div className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
               <User className="mr-2 w-5" />
               Profile
