@@ -10,23 +10,40 @@ import { FcSupport } from "react-icons/fc";
 import { LucidePaperclip } from "lucide-react";
 import useProfile from "../hooks/useProfile";
 import axiosInstance from "../api/axios";
-import ProfileModal from "./ProfileForm";
+import SectionEditModal from "./ProfileForm";
+import EducationEditModal from "./EducationModal";
+import ImageEditModal from "./EditImage";
 
 const Profile = () => {
   // const [profile, setProfile] = useState<Profile | null>(null);
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
     null
   );
+  const [editingSection, setEditingSection] = useState<
+    "phone" | "education" | "career" | null
+  >(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openEducationModal, setOpenEducationModal] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
+
   // const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("id");
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
   const { profile, loading, error } = useProfile(userId!);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [editingField, setEditingField] = useState<null | {
+    fieldKey: string;
+    fieldName: string;
+    value?: string;
+  }>(null);
 
   console.log(profile, "profile");
   console.log(userId, "userId in profile");
+
+  const openSectionEditor = (section: "phone" | "education" | "career") => {
+    setEditingSection(section);
+  };
 
   const handleClick = () => {
     setOpenModal(true);
@@ -135,25 +152,59 @@ const Profile = () => {
             <div className="md:flex gap-6 space-y-6 md:space-y-0">
               {/* Profile Card */}
               <div className="bg-white p-6 w-full md:w-1/3 rounded-2xl shadow-md">
-                <img
-                  src={
-                    backendUrl + profile?.profile_image || "/default_avatar.jpg"
-                  }
-                  alt="Profile"
-                  className="rounded-lg mx-auto object-cover aspect-square"
-                  width={500}
-                  height={500}
-                />
+                <div className="relative w-full">
+                  {profile?.profile_image ? (
+                    <>
+                      <img
+                        src={backendUrl + profile.profile_image}
+                        alt="Profile"
+                        className="rounded-lg mx-auto object-cover aspect-square cursor-pointer hover:opacity-80 transition"
+                        width={500}
+                        height={500}
+                        onClick={() => setOpenImageModal(true)}
+                      />
+                      <button
+                        onClick={() => setOpenImageModal(true)}
+                        className="absolute top-2 right-2 px-3 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                      >
+                        Edit
+                      </button>
+                    </>
+                  ) : (
+                    <div
+                      className="flex flex-col items-center justify-center border border-dashed border-gray-400 rounded-lg h-60 cursor-pointer hover:bg-gray-50 transition"
+                      onClick={() => setOpenImageModal(true)}
+                    >
+                      <p className="text-gray-500">No Profile Image</p>
+                      <button className="mt-2 px-4 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition">
+                        Add Image
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 <h3 className="text-center mt-4 font-semibold">
                   Username :{username}
                 </h3>
                 <p className="text-center text-gray-600 flex justify-center gap-3">
                   <span>Phone : {profile?.phone_number || "N/A"} </span>
-                  <span className="content-center">
-                    <FaEdit className="text-violet-500" />
+                  <span
+                    className="content-center cursor-pointer"
+                    onClick={() => openSectionEditor("phone")}
+                  >
+                    <FaEdit
+                      className="text-violet-500 cursor-pointer"
+                      onClick={() =>
+                        setEditingField({
+                          fieldKey: "phone_number",
+                          fieldName: "Phone Number",
+                          value: profile?.phone_number || "",
+                        })
+                      }
+                    />
                   </span>
                 </p>
+
                 <p className="text-center text-gray-600">Email : {email}</p>
               </div>
 
@@ -167,7 +218,10 @@ const Profile = () => {
                         Education
                       </span>
                       <span>
-                        <FaEdit className="text-violet-500" />
+                        <FaEdit
+                          className="text-violet-500 cursor-pointer"
+                          onClick={() => setOpenEducationModal(true)}
+                        />
                       </span>
                     </h3>
                     <p className="text-gray-600 pb-1">
@@ -205,7 +259,16 @@ const Profile = () => {
                         Career Objective
                       </span>
                       <span>
-                        <FaEdit className="text-violet-500" />
+                        <FaEdit
+                          className="text-violet-500 cursor-pointer"
+                          onClick={() =>
+                            setEditingField({
+                              fieldKey: "career_objective",
+                              fieldName: "Career Objective",
+                              value: profile?.career_objective || "",
+                            })
+                          }
+                        />
                       </span>
                     </h1>
                     <ul className="text-gray-600 pt-2 space-y-2">
@@ -342,12 +405,49 @@ const Profile = () => {
           )}
         </div>
       </main>
-      <ProfileModal
+      {/* <ProfileModal
         initialProfile={profile}
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         onSubmit={handleSave}
-      />
+      /> */}
+      <div>
+        {openEducationModal && profile && (
+          <EducationEditModal
+            isOpen={openEducationModal}
+            onClose={() => setOpenEducationModal(false)}
+            initialData={{
+              secondary_school: profile.secondary_school,
+              secondary_year: profile.secondary_year,
+              university: profile.university,
+              university_major: profile.university_major,
+              university_year: profile.university_year,
+            }}
+            onSubmit={handleSave}
+          />
+        )}
+      </div>
+      <div>
+        {editingField && (
+          <SectionEditModal
+            isOpen={!!editingField}
+            onClose={() => setEditingField(null)}
+            fieldName={editingField.fieldName}
+            fieldKey={editingField.fieldKey}
+            initialValue={editingField.value}
+            onSubmit={handleSave}
+          />
+        )}
+      </div>
+      <div>
+        {openImageModal && (
+          <ImageEditModal
+            isOpen={openImageModal}
+            onClose={() => setOpenImageModal(false)}
+            onSubmit={handleSave}
+          />
+        )}
+      </div>
     </div>
   );
 };

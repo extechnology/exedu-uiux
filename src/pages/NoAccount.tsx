@@ -2,7 +2,7 @@ import { SlUser } from "react-icons/sl";
 import { FaGraduationCap } from "react-icons/fa6";
 import { IoMdCopy } from "react-icons/io";
 import { LiaCertificateSolid } from "react-icons/lia";
-import ProfileModal from "./ProfileForm";
+// import ProfileModal from "./ProfileForm";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -85,15 +85,15 @@ const NoAccount = () => {
           Create your Account
         </button>
       </div>
-      {showModal && (
+      {/* {showModal && (
         <ProfileModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           onSubmit={(formData: FormData) => console.log(formData)}
-          initialProfile={null}
+          
           // userId={null}
         />
-      )}
+      )} */}
     </div>
   );
 };
