@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-// import { FaUserCircle } from "react-icons/fa";
 import { User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { BiSolidFoodMenu } from "react-icons/bi";
 
 const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -22,7 +22,6 @@ const Navbar = () => {
       navigate("/no-account");
     }
   };
-
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -129,10 +128,12 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden ml-4 text-blue-600 font-semibold text-sm border border-blue-600 px-3 py-1 rounded"
+          type="button"
+          title="Menu"
+          className="md:hidden  text-violet-600 font-semibold text-lg  px-3 py-1 "
           onClick={() => setShowMobileMenu((prev) => !prev)}
         >
-          Menu
+          <BiSolidFoodMenu className="w-[30px] h-[30px]" />
         </button>
       </nav>
 
@@ -161,10 +162,13 @@ const Navbar = () => {
                 </Link>
               </motion.li>
             ))}
-              <div onClick={handleProfileClick} className="flex md:hidden w-50 items-center text-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
-                <User className="mr-2 w-5" />
-                Profile
-              </div>
+            <div
+              onClick={handleProfileClick}
+              className="flex md:hidden w-50 items-center text-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer"
+            >
+              <User className="mr-2 w-5" />
+              Profile
+            </div>
           </motion.ul>
         )}
       </AnimatePresence>

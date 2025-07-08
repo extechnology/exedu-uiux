@@ -1,32 +1,57 @@
-
-import { FaTools, FaUserGraduate, FaHeart } from "react-icons/fa";
+import { FaTools, FaUserGraduate, FaHeart, FaEdit } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-// import "swiper/css";
-// import "swiper/css/pagination";
+import { useState } from "react";
 
 type SkillsProps = {
   skills: string | null;
   experience: string | null;
   interests: string | null;
+  onEdit?: (fieldKey: string, fieldName: string, value: string) => void;
 };
 
-const Skills = ({ skills, experience, interests }: SkillsProps) => {
-  const renderList = (data?: string | null) => {
+const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
+  const maxVisible = 5;
+  const [skillsExpanded, setSkillsExpanded] = useState(false);
+
+  const renderList = (data?: string | null, limit?: number) => {
     if (!data) return <li className="text-gray-400">No data available</li>;
-    return data
-      .split(",")
-      .map((item, index) => <li key={index}>{item.trim()}</li>);
+    const items = data.split(",").map((item) => item.trim());
+    const visibleItems =
+      limit && !skillsExpanded ? items.slice(0, limit) : items;
+
+    return (
+      <>
+        {visibleItems.map((item, index) => (
+          <li
+            key={index}
+            className="px-3 py-1 rounded shadow backdrop-blur-2xl bg-transparent text-gray-800"
+          >
+            {item}
+          </li>
+        ))}
+        {limit && items.length > limit && (
+          <button
+            onClick={() => setSkillsExpanded((prev) => !prev)}
+            className="text-violet-600 text-sm mt-2 underline hover:text-violet-800"
+          >
+            {skillsExpanded
+              ? "View Less"
+              : `View More (${items.length - limit})`}
+          </button>
+        )}
+      </>
+    );
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6">
       {/* Mobile View */}
-      <div className="grid md:hidden grid-cols-1 gap-6">
+      <div className="md:hidden px-4">
         <Swiper
           modules={[Pagination]}
-          spaceBetween={20}
-          slidesPerView={1.1}
+          spaceBetween={16}
+          slidesPerView={1.05}
           className="w-full"
           pagination={false}
         >
@@ -53,20 +78,41 @@ const Skills = ({ skills, experience, interests }: SkillsProps) => {
               items: interests,
             },
           ].map(({ title, icon, bg, color, items }, index) => (
-            <SwiperSlide key={index} className="h-full">
-              <div className="group min-h-[300px] h-full flex flex-col justify-start p-6 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-3xl shadow-md hover:shadow-xl transition duration-300 text-center">
+            <SwiperSlide key={index}>
+              <div className="group min-h-[320px] flex flex-col justify-start p-5 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 text-center">
                 <div
                   className={`w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-xl ${bg} group-hover:scale-110 transition-transform`}
                 >
                   <span className={`text-2xl ${color}`}>{icon}</span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-4 tracking-wide">
-                  {title}
-                </h2>
-                <ul className="flex flex-wrap gap-2 justify-center ">
-                  <li className=" text-gray-700 text-xs px-3 py-1">
-                    {renderList(items)}
-                  </li>
+                <div className="flex items-center justify-between pt-3 mb-3 px-2">
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {title}
+                  </h2>
+                  {onEdit && (
+                    <FaEdit
+                      onClick={() =>
+                        onEdit(
+                          title.toLowerCase().replace(" ", "_"),
+                          title,
+                          items || ""
+                        )
+                      }
+                      className="text-violet-600 text-base cursor-pointer hover:text-violet-800 transition"
+                    />
+                  )}
+                </div>
+                <ul className="flex flex-wrap gap-2 pt-2 justify-center">
+                  {items?.split(",").map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="bg-white shadow-sm px-3 py-1 text-xs rounded-full text-gray-700 border border-gray-200"
+                    >
+                      {item.trim()}
+                    </li>
+                  )) || (
+                    <li className="text-gray-400 text-sm">No data available</li>
+                  )}
                 </ul>
               </div>
             </SwiperSlide>
@@ -75,42 +121,58 @@ const Skills = ({ skills, experience, interests }: SkillsProps) => {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 p-6 bg-gradient-to-br from-white via-gray-100 to-slate-200 ">
-        {/* Card Template */}
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 p-6 bg-gradient-to-br from-white via-gray-100 to-slate-200">
         {[
           {
             title: "Skills",
             icon: <FaTools />,
             color: "text-blue-500",
             items: skills,
+            isSkills: true,
           },
           {
             title: "Experience",
             icon: <FaUserGraduate />,
             color: "text-green-500",
             items: experience,
+            isSkills: false,
           },
           {
             title: "Interests",
             icon: <FaHeart />,
             color: "text-pink-500",
             items: interests,
+            isSkills: false,
           },
-        ].map(({ title, icon, color, items }, i) => (
+        ].map(({ title, icon, color, items, isSkills }, i) => (
           <div
             key={i}
-            className="relative bg-white/60  backdrop-blur-md border border-white/30  rounded-3xl p-6 shadow-md hover:shadow-2xl transition-all duration-300 group"
+            className="relative bg-white/60 backdrop-blur-md border border-white/30 rounded-3xl p-6 shadow-md hover:shadow-2xl transition-all duration-300 group flex flex-col h-full"
           >
             <div
-              className={`text-4xl ${color} mb-4 transition-transform duration-300 group-hover:scale-110`}
+              className={`text-4xl ${color} mb-4 flex justify-between transition-transform duration-300 group-hover:scale-110`}
             >
-              {icon}
+              <span>{icon}</span>
+              {onEdit && (
+                <span className="text-lg">
+                  <FaEdit
+                    onClick={() =>
+                      onEdit(
+                        title.toLowerCase().replace(" ", "_"),
+                        title,
+                        items || ""
+                      )
+                    }
+                    className="text-violet-600 cursor-pointer"
+                  />
+                </span>
+              )}
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800  mb-4">
-              {title}
+            <h2 className="text-lg font-semibold flex justify-between text-gray-800 mb-2">
+              <span>{title}</span>
             </h2>
-            <ul className="text-sm md:text-base text-gray-700  space-y-2 text-left pl-2">
-              {renderList(items)}
+            <ul className="text-sm md:text-base text-gray-700 space-y-2 text-left pt-3">
+              {isSkills ? renderList(items, maxVisible) : renderList(items)}
             </ul>
           </div>
         ))}

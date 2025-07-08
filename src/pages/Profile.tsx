@@ -85,7 +85,7 @@ const Profile = () => {
   return (
     <div className="flex bg-gray-100 pt-18 overflow-x-hidden">
       {/* Sidebar */}
-      <aside className="w-64 hidden md:block bg-gray-200 shadow-md p-5 pt-10">
+      <aside className="w-64 hidden md:block fixed top-0 left-0 h-screen mt-17 bg-gray-200 shadow-md p-5 overflow-y-auto z-30">
         <div className="flex items-center space-x-2">
           <img src="/ex_edu_logo-03.png" alt="" className="p-2" />
         </div>
@@ -120,9 +120,9 @@ const Profile = () => {
       </aside>
 
       {/* Main content */}
-      <main className="md:flex-1 p-0 pt-5 md:p-8 bg-white max-w-full overflow-hidden">
-        <div className="flex justify-between items-center px-5">
-          <h2 className="md:text-2xl text-gray-700 font-semibold">
+      <main className="md:ml-64 flex-1 p-0 pt-5 md:p-8 bg-white max-w-full overflow-hidden">
+        <div className="flex md:justify-between justify-end items-center px-5">
+          <h2 className="md:text-2xl hidden md:block text-gray-700 font-semibold">
             Welcome to{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
               exedu
@@ -400,6 +400,9 @@ const Profile = () => {
                 skills={profile.skills}
                 experience={profile.experience}
                 interests={profile.interests}
+                onEdit={(fieldKey, fieldName, value) =>
+                  setEditingField({ fieldKey, fieldName, value })
+                }
               />
             </div>
           )}
