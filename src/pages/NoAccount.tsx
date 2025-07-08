@@ -4,21 +4,32 @@ import { IoMdCopy } from "react-icons/io";
 import { LiaCertificateSolid } from "react-icons/lia";
 import ProfileModal from "./ProfileForm";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NoAccount = () => {
-
   const [showModal, setShowModal] = useState(false);
-  const handleProfileCick = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const handleProfileClick = () => {
+    if (!token) {
+      navigate("/login", {
+        state: { from: location.pathname },
+      });
+      return;
+    }
     setShowModal(true);
-  }
+  };
 
+  const token = localStorage.getItem("accessToken");
 
   return (
     <div className="py-20 max-w-7xl mx-auto">
       <div className="md:flex gap-8">
         <img src="/ri_shining-2-fill.svg" alt="" className="md:w-16 w-12" />
         <div className="pt-5">
-          <h1 className="text-3xl md:text-start text-center font-bold">Welcome to Eduportal </h1>
+          <h1 className="text-3xl md:text-start text-center font-bold">
+            Welcome to Eduportal{" "}
+          </h1>
           <p className="text-center pt-2">
             Your Personal education dashboard awaits
           </p>
@@ -68,7 +79,7 @@ const NoAccount = () => {
       </div>
       <div className="flex justify-center pt-12">
         <button
-          onClick={handleProfileCick}
+          onClick={handleProfileClick}
           className="w-80 py-3 bg-gradient-to-r font-bold from-fuchsia-500 to-violet-600 text-white rounded-full hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-500 transition-all duration-300"
         >
           Create your Account
@@ -79,7 +90,8 @@ const NoAccount = () => {
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           onSubmit={(formData: FormData) => console.log(formData)}
-          userId={null}
+          initialProfile={null}
+          // userId={null}
         />
       )}
     </div>

@@ -8,6 +8,7 @@ import "aos/dist/aos.css";
 import "./App.css";
 import Loader from "./components/common/Loader";
 import NotFound from "./pages/NotFound";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   useEffect(() => {
@@ -19,6 +20,7 @@ const App = () => {
 
   return (
     <Router>
+      <Toaster position="top-center" reverseOrder={false} />
       <ScrollToTop />
       <Suspense fallback={<Loader />}>
         <Routes>

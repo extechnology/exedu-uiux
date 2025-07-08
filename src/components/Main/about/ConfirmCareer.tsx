@@ -1,5 +1,17 @@
-
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import Loader from "../../common/Loader";
+import type { SectionImage } from "../../../api/types";
 function ConfirmCareer() {
+  const { sectionImages, loading, error } = useSectionImages();
+
+  const Career: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "confirm_career"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  if (loading) return <Loader />;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!Career) return <div>No image found for this section.</div>;
 
   return (
     <div className="bg-gradient-to-b from-gray-50 to-gray-100">
@@ -31,7 +43,7 @@ function ConfirmCareer() {
           className="md:w-1/3 flex md:justify-end px-5 md:px-0 pt-5 md:pt-0"
         >
           <img
-            src="/digitech_profession.jpg"
+            src={BACKEND_URL + Career.image}
             alt="no image"
             width={350}
             height={300}

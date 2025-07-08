@@ -1,47 +1,20 @@
 import React, { useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
+// import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-interface Certificate {
-  file: File | null;
-  description: string;
-}
-
-interface FormDataState {
-  profileImage: File | null;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  secondarySchool: string;
-  secondaryYear: string;
-  university: string;
-  universityMajor: string;
-  universityYear: string;
-  careerObjective: string;
-  certificates: Certificate[];
-  skills: string;
-  experience: string;
-  interests: string;
-}
-
-interface ProfileModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (formData: FormData) => void;
-  userId: string | null; // Pass userId as prop instead of Clerk
-}
+import type { ProfileModalProps } from "../api/types";
+// import axiosInstance from "../api/axios";
 
 const ProfileModal: React.FC<ProfileModalProps> = ({
+  initialProfile,
   isOpen,
   onClose,
   onSubmit,
-  userId,
 }) => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormDataState>({
-    profileImage: null,
+  // const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    profileImage: null as File | null,
     name: "",
     email: "",
     phoneNumber: "",
@@ -51,62 +24,39 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     universityMajor: "",
     universityYear: "",
     careerObjective: "",
-    certificates: [{ file: null, description: "" }],
     skills: "",
     experience: "",
     interests: "",
   });
 
+  const userId = localStorage.getItem("id");
+  console.log(userId, "user id");
+  const profile = initialProfile;
+  console.log(profile, "profile");
+
+  console.log(initialProfile?.unique_id, "profile unique id");
+
+
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index?: number
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "certificateDescription" && index !== undefined) {
-      const updatedCertificates = [...formData.certificates];
-      updatedCertificates[index].description = value;
-      setFormData((prev) => ({ ...prev, certificates: updatedCertificates }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index?: number
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (index !== undefined) {
-        const updatedCertificates = [...formData.certificates];
-        updatedCertificates[index].file = file;
-        setFormData((prev) => ({ ...prev, certificates: updatedCertificates }));
-      } else {
-        setFormData((prev) => ({ ...prev, profileImage: file }));
-      }
+      setFormData((prev) => ({ ...prev, profileImage: file }));
     }
-  };
-
-  const addCertificate = () => {
-    setFormData((prev) => ({
-      ...prev,
-      certificates: [...prev.certificates, { file: null, description: "" }],
-    }));
-  };
-
-  const removeCertificate = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      certificates: prev.certificates.filter((_, i) => i !== index),
-    }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("phone_number", formData.phoneNumber);
     data.append("name", formData.name);
     data.append("email", formData.email);
+    data.append("phone_number", formData.phoneNumber);
     data.append("secondary_school", formData.secondarySchool);
     data.append("secondary_year", formData.secondaryYear);
     data.append("university", formData.university);
@@ -121,347 +71,227 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       data.append("profile_image", formData.profileImage);
     }
 
-    try {
-      const profileResponse = await fetch(
-        `https://server.exedu.in/api/profiles/`,
-        {
-          method: "POST",
-          body: data,
-          credentials: "include",
-          headers: {
-            "Clerk-User-ID": userId || "",
-          },
-        }
-      );
-
-      if (!profileResponse.ok) throw new Error("Failed to create profile");
-
-      const profileResult = await profileResponse.json();
-      const profileId = profileResult.id;
-      localStorage.setItem("profileId", String(profileId));
-      navigate(`/profile/${profileId}`);
-
-      for (const certificate of formData.certificates) {
-        if (certificate.file) {
-          const certData = new FormData();
-          certData.append("profile", profileId);
-          certData.append("file", certificate.file);
-          certData.append("description", certificate.description);
-          await fetch(`https://server.exedu.in/api/certificates/`, {
-            method: "POST",
-            body: certData,
-            credentials: "include",
-          });
-        }
-      }
-
-      toast.success("Profile created successfully!", { position: "top-right" });
-      onSubmit(data);
-      onClose();
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Failed to create profile. Please try again.", {
-        position: "top-right",
-      });
-    }
+    onSubmit(data);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 backdrop-blur-lg flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl w-full max-w-xl mx-4 sm:mx-0 p-6 max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-600">
-            Profile Information
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white p-6 pb-0 z-10">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+          <div className="border-b border-gray-200 mt-4"></div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Profile Image */}
-          <div className="flex flex-col py-4 items-center justify-center text-center">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Profile Image
-            </label>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative group">
+              <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-200">
                 {formData.profileImage ? (
                   <img
                     src={URL.createObjectURL(formData.profileImage)}
-                    alt="Profile"
-                    width={64}
-                    height={64}
-                    className="rounded-full object-cover"
+                    alt="Preview"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-400 text-2xl">📷</span>
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-10 w-10"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      />
+                    </svg>
+                  </div>
                 )}
               </div>
-              <label className="cursor-pointer bg-pink-400 text-white px-4 py-2 rounded-md hover:bg-pink-600 transition text-sm">
-                Upload your profile image
+              <label className="absolute -bottom-2 right-2 bg-white p-1.5 rounded-full shadow-md border border-gray-200 cursor-pointer group-hover:bg-gray-50 transition-colors">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
                 <input
+                  title="image"
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
                   className="hidden"
-                  required
                 />
               </label>
             </div>
+            <span className="text-xs text-gray-500">
+              Click to upload new photo
+            </span>
           </div>
 
-          {/* Contact Information */}
-          <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Contact Information
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                required
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter your name"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="email"
-                required
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter your email"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                required
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Enter your phone number"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          {/* Secondary Education */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Secondary Education
-            </label>
-            <input
-              required
-              type="text"
-              name="secondarySchool"
-              value={formData.secondarySchool}
-              onChange={handleInputChange}
-              placeholder="Enter your secondary school name"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-            />
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Passing Year
-            </label>
-            <input
-              required
-              type="text"
-              name="secondaryYear"
-              value={formData.secondaryYear}
-              onChange={handleInputChange}
-              placeholder="e.g. 2015"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Graduation */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Graduation
-            </label>
-            <input
-              type="text"
-              name="university"
-              value={formData.university}
-              onChange={handleInputChange}
-              placeholder="Enter your college or university name"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-            />
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Stream
-            </label>
-            <input
-              type="text"
-              name="universityMajor"
-              value={formData.universityMajor}
-              onChange={handleInputChange}
-              placeholder="e.g. Computer Science, Engineering"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-            />
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Year of Graduation
-            </label>
-            <input
-              type="text"
-              name="universityYear"
-              value={formData.universityYear}
-              onChange={handleInputChange}
-              placeholder="e.g. 2019"
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Career Objective */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Career Objective
-            </label>
-            <textarea
-              required
-              name="careerObjective"
-              value={formData.careerObjective}
-              onChange={handleInputChange}
-              placeholder="Describe your career goals and aspirations..."
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-            />
-          </div>
-
-          {/* Certificates (Updated) */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Certificates
-            </label>
-            {formData.certificates.map((certificate, index) => (
-              <div
-                key={index}
-                className="mb-4 p-4 border rounded-md bg-gray-50 relative"
-              >
-                {/* Certificate File Upload */}
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-600 mb-1">
-                    Certificate File {index + 1}
-                  </label>
-                  <label className="cursor-pointer bg-pink-400 text-white px-4 py-2 rounded-md hover:bg-pink-600 transition text-sm">
-                    {certificate.file
-                      ? certificate.file.name
-                      : "Upload Certificate"}
+          {/* Form Sections */}
+          <div className="space-y-6">
+            {/* Personal Info */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">
+                Personal Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { label: "Full Name", name: "name" },
+                  { label: "Email Address", name: "email", type: "email" },
+                  { label: "Phone Number", name: "phoneNumber", type: "tel" },
+                ].map(({ label, name, type = "text" }) => (
+                  <div key={name} className="space-y-1">
+                    <label className="text-sm font-medium text-gray-600">
+                      {label}
+                    </label>
                     <input
-                      type="file"
-                      accept="image/*,application/pdf"
-                      onChange={(e) => handleFileChange(e, index)}
-                      className="hidden"
+                      title="name"
+                      type={type}
+                      name={name}
+                      value={(formData as any)[name]}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     />
-                  </label>
-                </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                {/* Certificate Description */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-1">
-                    Description
+            {/* Education */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">
+                Education
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    label: "Secondary School",
+                    name: "secondarySchool",
+                    type: "text",
+                  },
+                  {
+                    label: "Secondary Year",
+                    name: "secondaryYear",
+                    type: "number",
+                    min: 1900,
+                    max: new Date().getFullYear() + 5,
+                  },
+                  {
+                    label: "University",
+                    name: "university",
+                    type: "text",
+                  },
+                  {
+                    label: "University Major",
+                    name: "universityMajor",
+                    type: "text",
+                  },
+                  {
+                    label: "University Year",
+                    name: "universityYear",
+                    type: "number",
+                    min: 1900,
+                    max: new Date().getFullYear() + 5,
+                  },
+                ].map(({ label, name, type, min, max }) => (
+                  <div key={name} className="space-y-1">
+                    <label className="text-sm font-medium text-gray-600">
+                      {label}
+                    </label>
+                    <input
+                      title={name}
+                      type={type}
+                      name={name}
+                      value={(formData as any)[name] || ""}
+                      onChange={handleInputChange}
+                      min={min}
+                      max={max}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      placeholder={
+                        type === "number"
+                          ? "YYYY"
+                          : `Enter ${label.toLowerCase()}`
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Career & Skills */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">
+                Career & Skills
+              </h3>
+              {[
+                { label: "Career Objective", name: "careerObjective" },
+                { label: "Skills (comma separated)", name: "skills" },
+                { label: "Work Experience", name: "experience" },
+                { label: "Interests", name: "interests" },
+              ].map(({ label, name }) => (
+                <div key={name} className="space-y-1">
+                  <label className="text-sm font-medium text-gray-600">
+                    {label}
                   </label>
                   <textarea
-                    name="certificateDescription"
-                    value={certificate.description}
-                    onChange={(e) => handleInputChange(e, index)}
-                    placeholder="Describe this certificate (e.g., title, issuer, date)..."
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={2}
+                    title="name"
+                    name={name}
+                    value={(formData as any)[name]}
+                    onChange={handleInputChange}
+                    // required={name !== "experience"}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[100px]"
                   />
                 </div>
-
-                {/* Remove Certificate Button */}
-                {formData.certificates.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeCertificate(index)}
-                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addCertificate}
-              className="mt-2 text-pink-600 hover:text-pink-800"
-            >
-              + Add Another Certificate
-            </button>
+              ))}
+            </div>
           </div>
 
-          {/* Skills */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Skills
-            </label>
-            <textarea
-              name="skills"
-              value={formData.skills}
-              onChange={handleInputChange}
-              placeholder="List your key skills..."
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-              required
-            />
-          </div>
-
-          {/* Experience */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Experience
-            </label>
-            <textarea
-              name="experience"
-              value={formData.experience}
-              onChange={handleInputChange}
-              placeholder="Describe your work experience..."
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-            />
-          </div>
-
-          {/* Interests */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Interests
-            </label>
-            <textarea
-              name="interests"
-              value={formData.interests}
-              onChange={handleInputChange}
-              placeholder="Share your interests, hobbies..."
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-              required
-            />
-          </div>
-
-          {/* Buttons */}
-          <div className="flex justify-end space-x-2">
+          {/* Footer Buttons */}
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-100"
+              className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-pink-400 text-white rounded-md hover:bg-pink-700"
+              className="px-5 py-2.5 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
             >
-              Submit
+              Save Changes
             </button>
           </div>
         </form>

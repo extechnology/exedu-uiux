@@ -1,95 +1,103 @@
 import { FaUser } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
 import AttendanceTracker from "../components/profile/AttendanceTracker";
 import ProgressSection from "../components/profile/ProgressSection";
+import { FaMobile, FaPaypal, FaEdit } from "react-icons/fa";
 import Skills from "../components/profile/SkillsSection";
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-type Certificate = {
-  id: number;
-  file: string;
-  description: string;
-  profile: number;
-};
-
-type Profile = {
-  id: number;
-  certificates: Certificate[];
-  name: string;
-  email: string;
-  profile_image: string;
-  clerk_user_id: string;
-  phone_number: string;
-  secondary_school: string;
-  secondary_year: string;
-  university: string;
-  university_major: string;
-  university_year: string;
-  career_objective: string;
-  skills: string;
-  experience: string;
-  interests: string;
-};
+import { useState } from "react";
+import type { Profile, StudentCertificates } from "../api/types";
+import { PersonStanding } from "lucide-react";
+import { FcSupport } from "react-icons/fc";
+import { LucidePaperclip } from "lucide-react";
+import useProfile from "../hooks/useProfile";
+import axiosInstance from "../api/axios";
+import ProfileModal from "./ProfileForm";
 
 const Profile = () => {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
-  const [loading, setLoading] = useState(true);
-  const params = useParams();
-  const userId = params?.id;
+  // const [profile, setProfile] = useState<Profile | null>(null);
+  const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
+    null
+  );
+  const [openModal, setOpenModal] = useState(false);
+  // const [loading, setLoading] = useState(true);
+  const userId = localStorage.getItem("id");
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
+  const { profile, loading, error } = useProfile(userId!);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  console.log(loading);
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(
-          `https://server.exedu.in/api/profiles/${userId}/`
-        );
-        const data = await res.json();
-        setProfile(data);
-      } catch (err) {
-        console.error("Failed to fetch profile", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  console.log(profile, "profile");
+  console.log(userId, "userId in profile");
 
-    if (userId) {
-      fetchProfile();
+  const handleClick = () => {
+    setOpenModal(true);
+  };
+
+  const handleSave = async (formData: FormData) => {
+    if (!userId) {
+      console.error("Profile userId is missing again");
+      return;
     }
-  }, [userId]);
+
+    try {
+      const res = await axiosInstance.put(
+        `/profile/user/${userId}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Profile updated:", res.data);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to update profile", err);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
-    <div className="flex bg-gray-100 pt-20 overflow-x-hidden">
+    <div className="flex bg-gray-100 pt-18 overflow-x-hidden">
       {/* Sidebar */}
       <aside className="w-64 hidden md:block bg-gray-200 shadow-md p-5 pt-10">
         <div className="flex items-center space-x-2">
-          <div className="h-10 w-10 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full"></div>
-          <h1 className="text-xl font-semibold">exedu</h1>
+          <img src="/ex_edu_logo-03.png" alt="" className="p-2" />
         </div>
-        <ul className="mt-8 space-y-4">
+        <ul className="mt-8 space-y-4 cursor-pointer">
           <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
             <FaUser />
             <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
               My dashboard
             </span>
           </li>
-          <li className="flex items-center space-x-2 text-gray-500">
-            <IoMdSettings />
-            <span>Accounts</span>
-          </li>
-          <li className="flex items-center space-x-2 text-gray-500">
+          <li className="flex items-center space-x-2 text-gray-500 bg-white p-2 rounded">
+            <FaMobile className="bg-gray-200  rounded-full" />
             <span>Mobile</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray-500">
+          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+            <FaPaypal className="bg-gray-200  rounded-full" />
             <span>Payments</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray-500">
+          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+            <LucidePaperclip className="w-4 h-4 bg-gray-200  rounded-full" />
             <span>Complaints</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray-500">
+          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+            <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
             <span>Supports</span>
+          </li>
+          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded ">
+            <FcSupport className="bg-gray-200  rounded-full" />
+            <span onClick={handleClick}>Edit Profile</span>
           </li>
         </ul>
       </aside>
@@ -98,19 +106,25 @@ const Profile = () => {
       <main className="md:flex-1 p-0 pt-5 md:p-8 bg-white max-w-full overflow-hidden">
         <div className="flex justify-between items-center px-5">
           <h2 className="md:text-2xl text-gray-700 font-semibold">
-            Welcome to exedu student portal
+            Welcome to{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+              exedu
+            </span>{" "}
+            student portal
           </h2>
           <div className="flex items-center space-x-4 md:pr-4">
             {/* <FaBell className="text-gray-600" /> */}
             <div className="flex items-center space-x-2">
               <img
-                src={profile?.profile_image || "/man.png"}
+                src={backendUrl + profile?.profile_image || "/man.png"}
                 alt="Profile"
                 className="h-10 w-10 rounded-full object-cover"
                 width={40}
                 height={40}
               />
-              <span>Hello {profile?.name}</span>
+              <span>
+                Hello <span className="font-semibold text-md">{username}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -122,7 +136,9 @@ const Profile = () => {
               {/* Profile Card */}
               <div className="bg-white p-6 w-full md:w-1/3 rounded-2xl shadow-md">
                 <img
-                  src={profile?.profile_image || "/default-avatar.png"}
+                  src={
+                    backendUrl + profile?.profile_image || "/default_avatar.jpg"
+                  }
                   alt="Profile"
                   className="rounded-lg mx-auto object-cover aspect-square"
                   width={500}
@@ -130,17 +146,15 @@ const Profile = () => {
                 />
 
                 <h3 className="text-center mt-4 font-semibold">
-                  {profile?.name}
+                  Username :{username}
                 </h3>
-                <p className="text-center text-gray-600">
-                  {profile?.phone_number}
+                <p className="text-center text-gray-600 flex justify-center gap-3">
+                  <span>Phone : {profile?.phone_number || "N/A"} </span>
+                  <span className="content-center">
+                    <FaEdit className="text-violet-500" />
+                  </span>
                 </p>
-                <p className="text-center text-gray-600">{profile?.email}</p>
-                {/* <div className="text-center mt-4">
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600">
-                    Save
-                  </button>
-                </div> */}
+                <p className="text-center text-gray-600">Email : {email}</p>
               </div>
 
               {/* Right Section */}
@@ -148,30 +162,50 @@ const Profile = () => {
                 {/* Education Section */}
                 <div className="md:flex gap-6 justify-between space-y-6 md:space-y-0">
                   <div className="bg-white p-6 rounded-2xl shadow-md md:w-1/2">
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold flex items-center justify-between">
                       <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
                         Education
                       </span>
+                      <span>
+                        <FaEdit className="text-violet-500" />
+                      </span>
                     </h3>
                     <p className="text-gray-600 pb-1">
-                      Secondary School:{profile?.secondary_school}
+                      Secondary School:{" "}
+                      <span className="font-semibold  ">
+                        {profile?.secondary_school}
+                      </span>
                     </p>
                     <p className="text-gray-600 pb-1">
-                      Year of Passing: {profile?.secondary_year}
+                      Year of Passing:{" "}
+                      <span className="font-semibold ">
+                        {profile?.secondary_year}
+                      </span>
                     </p>
                     <p className="text-gray-600 mt-4 pb-1">Graduation</p>
-                    <p className="text-gray-900 pb-1">{profile?.university}</p>
+                    <p className="text-gray-600 pb-1 font-semibold ">
+                      {profile?.university}
+                    </p>
                     <p className="text-gray-600 pb-1">
-                      Degree: {profile?.university_major}
+                      Degree:{" "}
+                      <span className="font-semibold ">
+                        {profile?.university_major}
+                      </span>
                     </p>
                     <p className="text-gray-600">
-                      Graduation Year: {profile?.university_year}
+                      Graduation Year:{" "}
+                      <span className="font-semibold ">
+                        {profile?.university_year}
+                      </span>
                     </p>
                   </div>
                   <div className="bg-white p-6 rounded-2xl shadow-md md:w-1/2">
-                    <h1>
+                    <h1 className="font-semibold flex items-center justify-between">
                       <span className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
                         Career Objective
+                      </span>
+                      <span>
+                        <FaEdit className="text-violet-500" />
                       </span>
                     </h1>
                     <ul className="text-gray-600 pt-2 space-y-2">
@@ -184,7 +218,6 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Profile Details */}
                 <div className="bg-white p-6  md:flex justify-between rounded-2xl shadow-md">
                   <div>
                     <h3 className="font-semibold pb-2">
@@ -195,14 +228,12 @@ const Profile = () => {
                     <p className="text-gray-600 pb-1">
                       Joined Course: AI Hybrid Digital Marketing
                     </p>
-                    <p className="text-gray-900 font-bold pb-1">
-                      {/* Course Name */}
-                    </p>
+                    <p className="text-gray-900 font-bold pb-1"></p>
                     <p className="text-gray-600 pb-1">
-                      Course Duration: 3 Months{/* Duration */}
+                      Course Duration: 3 Months
                     </p>
                     <p className="text-gray-600">
-                      Class Start Date: 20/04/2025{/* Start Date */}
+                      Class Start Date: 20/04/2025
                     </p>
                   </div>
                   <div className="content-center pt-4 md:pt-0">
@@ -217,7 +248,6 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Attendance Tracker */}
             <div className="mt-6 md:flex gap-6 space-y-6 md:space-y-0 ">
               <div>
                 <AttendanceTracker />
@@ -229,7 +259,7 @@ const Profile = () => {
                   </span>
                 </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                   {profile?.certificates.map((cert) => (
                     <div
                       key={cert.id}
@@ -249,7 +279,6 @@ const Profile = () => {
                     </div>
                   ))}
 
-                  {/* Add dummy placeholders if fewer than 3 certificates */}
                   {Array.from({
                     length: Math.max(
                       0,
@@ -272,9 +301,8 @@ const Profile = () => {
                       </h1>
                     </div>
                   ))}
-                </div>
+                </div> */}
 
-                {/* Modal Popup */}
                 {selectedCert && (
                   <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-lg flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-lg overflow-auto relative">
@@ -314,6 +342,12 @@ const Profile = () => {
           )}
         </div>
       </main>
+      <ProfileModal
+        initialProfile={profile}
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        onSubmit={handleSave}
+      />
     </div>
   );
 };

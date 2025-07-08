@@ -2,6 +2,9 @@
 import { Route } from "react-router-dom";
 import { lazy } from "react";
 import MainLayout from "../components/layouts/MainLayout";
+import Login from "../components/Account/Login";
+import Register from "../components/Account/Register";
+import VerifyOtp from "../components/Account/VerifyOtp";
 
 const Home = lazy(() => import("../pages/Home"));
 const About = lazy(() => import("../pages/About"));
@@ -17,12 +20,15 @@ const PublicRoutes = () => (
   <>
     <Route element={<MainLayout />}>
       <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/about" element={<About />} />
       <Route path="/course" element={<Course />} />
       <Route path="/admission" element={<Admission />} />
-      <Route path="/single" element={<CourseSingle />} />
+      <Route path="/single/:id" element={<CourseSingle />} />
       <Route path="/no-account" element={<NoAccount />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:id" element={<Profile />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
     </Route>

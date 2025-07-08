@@ -5,13 +5,32 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
 
-  const handleDoubleClick = () => {
-    navigate("/profile");
+  const token = localStorage.getItem("accessToken");
+  const id = localStorage.getItem("id");
+  console.log(id, "id");
+
+  const isLoggedIn = token !== null;
+
+  const handleProfileClick = () => {
+    if (isLoggedIn && id) {
+      navigate(`/profile/${id}`);
+    } else {
+      navigate("/no-account");
+    }
+  };
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("id");
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -64,12 +83,13 @@ const Navbar = () => {
           onMouseEnter={() => setShowProfileMenu(true)}
           onMouseLeave={() => setShowProfileMenu(false)}
         >
-          <Link to={"/no-account"} onDoubleClick={handleDoubleClick}>
-            <div className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
-              <User className="mr-2 w-5" />
-              Profile
-            </div>
-          </Link>
+          <div
+            onClick={handleProfileClick}
+            className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer"
+          >
+            <User className="mr-2 w-5" />
+            Profile
+          </div>
 
           <AnimatePresence>
             {showProfileMenu && (
@@ -88,7 +108,7 @@ const Navbar = () => {
                       Login
                     </Link>
                     <Link
-                      to="/signup"
+                      to="/register"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
                       Signup
@@ -96,8 +116,8 @@ const Navbar = () => {
                   </>
                 ) : (
                   <button
-                    onClick={() => setIsLoggedIn(false)}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    onClick={() => handleLogout()}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
                   >
                     Logout
                   </button>
@@ -141,12 +161,10 @@ const Navbar = () => {
                 </Link>
               </motion.li>
             ))}
-            <Link to={"/no-account"} onDoubleClick={handleDoubleClick}>
-              <div className="flex md:hidden w-50 items-center text-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
+              <div onClick={handleProfileClick} className="flex md:hidden w-50 items-center text-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer">
                 <User className="mr-2 w-5" />
                 Profile
               </div>
-            </Link>
           </motion.ul>
         )}
       </AnimatePresence>

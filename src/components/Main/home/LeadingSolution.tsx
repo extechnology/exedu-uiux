@@ -1,4 +1,22 @@
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import type { SectionImage } from "../../../api/types";
+import { Loader } from "lucide-react";
+
 const LeadingSolution = () => {
+  const { sectionImages, loading, error } = useSectionImages();
+  const LeadingSolution: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "leading_solution"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <div className="md:py-15 py-8">
       <div className="xl:flex gap-8 justify-between max-w-7xl mx-auto">
@@ -8,7 +26,7 @@ const LeadingSolution = () => {
           data-aos-duration="900"
         >
           <img
-            src="https://img.freepik.com/free-photo/man-surrounded-by-smart-students-with-books-looking-camera_23-2148166282.jpg?uid=R160032739&ga=GA1.1.1208105082.1712396076&semt=ais_hybrid&w=740"
+            src={BACKEND_URL + LeadingSolution?.image}
             alt=""
             className="px-5 md:px-0 rounded-md md:rounded-0"
           />
@@ -34,11 +52,9 @@ const LeadingSolution = () => {
             data-aos="fade-up"
             data-aos-duration="1200"
           >
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae quis
-            eligendi doloremque, atque maxime rerum sed ipsum corrupti? Eos modi
-            iure quis eum quidem voluptatem, blanditiis cum inventore quia natus
-            omnis commodi suscipit doloremque quam ullam, quod rem consequatur
-            aliquam{" "}
+            The Most Talented Education Solution for Your Success.Empowering
+            Students with Quality Learning,Expert Guidance and Proven Results,
+            Merging Advanced Technology with Innovative Learning.
           </p>
         </div>
       </div>

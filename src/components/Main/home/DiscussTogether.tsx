@@ -1,6 +1,37 @@
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import Loader from "../../common/Loader";
+import type { SectionImage } from "../../../api/types";
+// import { useState } from "react";
+
 const DiscussTogether = () => {
+  const { sectionImages, loading, error } = useSectionImages();
+
+  console.log(sectionImages);
+
+  const discussImage: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "discuss_together"
+  );
+  
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const style: React.CSSProperties = {
+    backgroundImage: discussImage
+      ? `url(${BACKEND_URL}${discussImage.image})`
+      : "",
+  };
+
+  
+
+  if (loading) return <Loader />;
+  if (error) return <div>Error:</div>;
+  if (!discussImage) return <div>No image found for this section.</div>;
+   
   return (
-    <div className="relative h-[300px] bg-[url('https://img.freepik.com/free-photo/colleagues-talking-learning-study-session_23-2149285458.jpg')] bg-cover bg-center">
+    <div
+      style={style}
+      className="relative h-[300px]  bg-cover bg-center"
+    >
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 z-0"></div>
 

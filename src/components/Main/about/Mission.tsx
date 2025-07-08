@@ -1,16 +1,31 @@
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import Loader from "../../common/Loader";
+import type { SectionImage } from "../../../api/types";
+
 
 function Mission() {
+  const { sectionImages, loading, error } = useSectionImages();
+
+  const Mission: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "mission"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  if (loading) return <Loader />;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!Mission) return <div>No image found for this section.</div>;
 
   return (
     <div className="bg-violet-900 ">
       <div className="max-w-6xl mx-auto md:flex content-center py-15 gap-10 px-5 md:px-0">
         <div data-aos="fade-down" className="md:w-1/3 pb-10 md:pb-0">
-            <img
-              src="/our_mission.jpg"              alt="no image"
-              width={400}
-              height={400}
-              className="rounded-full w-[75%] mx-auto md:w-full"
-            />
+          <img
+            src={BACKEND_URL + Mission.image}
+            alt="no image"
+            width={400}
+            height={400}
+            className="rounded-full w-[75%] mx-auto md:w-full"
+          />
         </div>
         <div className="md:w-2/3 content-center pt-2 md:pt-0">
           <h1

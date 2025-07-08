@@ -1,8 +1,82 @@
 import { FaLocationDot } from "react-icons/fa6";
 import { FiPhoneCall } from "react-icons/fi";
 import { IoIosMail } from "react-icons/io";
+import { useSectionImages } from "../hooks/useSectionImages";
+import Loader from "../components/common/Loader";
+import type { SectionImage } from "../api/types";
+import axiosInstance from "../api/axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Admission() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    number: "",
+    course: "",
+    message: "",
+  });
+
+  const courseOptions = [
+    "Full Stack Development",
+    "Data Science",
+    "Cybersecurity",
+    "UI/UX Design",
+    "Digital Marketing",
+  ];
+
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string[]> | null>(null);
+  const { sectionImages, loading, error } = useSectionImages();
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSuccess(null);
+    setErrors(null);
+
+    try {
+      await axiosInstance.post("/contact/", formData);
+      setSuccess("Form submitted successfully!");
+      toast.success("Form submitted successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        number: "",
+        course: "",
+        message: "",
+      });
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        setErrors(error.response.data);
+      } else {
+        setErrors({ general: ["Something went wrong. Try again."] });
+        toast.error("Something went wrong. Try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const LeadingSolution: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "contact"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  if (loading) return <Loader />;
+  if (error) return <div>Error:</div>;
   return (
     <div className="max-w-7xl mx-auto  text-gray-700 pt-24 pb-16">
       <div className="text-center py-10  ">
@@ -39,54 +113,94 @@ export default function Admission() {
             Let’s connect
           </h2>
 
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div className="w-full md:w-1/2">
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full px-4 py-3 border border-gray-400 rounded-md"
+                />
+                {errors?.name && (
+                  <p className="text-red-400 text-sm">{errors.name[0]}</p>
+                )}
+              </div>
+
+              <div className="w-full md:w-1/2">
+                <input
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="Email"
+                  className="w-full px-4 py-3 border border-gray-400 rounded-md"
+                />
+                {errors?.email && (
+                  <p className="text-red-400 text-sm">{errors.email[0]}</p>
+                )}
+              </div>
+            </div>
+
             <input
-              type="text"
-              placeholder="First Name"
-              className="w-full md:w-1/2 px-4 py-3 bg-[var(--quaternary-bg-color)] border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              data-aos="fade-up"
-              data-aos-duration="1200"
+              name="number"
+              value={formData.number}
+              onChange={handleChange}
+              type="tel"
+              placeholder="Phone Number"
+              className="w-full mb-4 px-4 py-3 border border-gray-400 rounded-md"
             />
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="w-full md:w-1/2 px-4 py-3 bg-[var(--quaternary-bg-color)] border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              data-aos="fade-up"
-              data-aos-duration="1200"
+            {errors?.number && (
+              <p className="text-red-400 text-sm">{errors.number[0]}</p>
+            )}
+
+            <select
+              name="course"
+              value={formData.course}
+              onChange={handleChange}
+              title="course"
+              className="w-full mb-4 px-4 py-3 border text-gray-400 border-gray-400 rounded-md"
+            >
+              <option value="" disabled>
+                -- Select Course --
+              </option>
+              {courseOptions.map((course) => (
+                <option key={course} value={course} className="text-gray-700">
+                  {course}
+                </option>
+              ))}
+            </select>
+            {errors?.course && (
+              <p className="text-red-400 text-sm">{errors.course[0]}</p>
+            )}
+
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Message"
+              className="w-full mb-6 px-4 py-3 h-28 resize-none border border-gray-400 rounded-md"
             />
-          </div>
+            {errors?.message && (
+              <p className="text-red-400 text-sm">{errors.message[0]}</p>
+            )}
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full mb-4 px-4 py-3 bg-[var(--quaternary-bg-color)] border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            data-aos="fade-up"
-            data-aos-duration="1300"
-          />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full bg-purple-600 py-3 rounded-md text-white font-semibold"
+            >
+              {submitting ? "Submitting..." : "Send it 🚀"}
+            </button>
 
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className="w-full mb-4 px-4 py-3 bg-[var(--quaternary-bg-color)] border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            data-aos="fade-up"
-            data-aos-duration="1400"
-          />
+            {success && <p className="text-green-600 pt-4">{success}</p>}
+            {errors?.general && (
+              <p className="text-red-400 pt-4">{errors.general[0]}</p>
+            )}
+          </form>
 
-          <textarea
-            placeholder="Message"
-            className="w-full mb-6 px-4 py-3 h-28 resize-none bg-[var(--quaternary-bg-color)] border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            data-aos="fade-up"
-            data-aos-duration="1500"
-          ></textarea>
-
-          <button
-            data-aos="zoom-in-up"
-            data-aos-duration="1000"
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-500 py-3 rounded-md text-white font-semibold tracking-wide flex items-center justify-center gap-2 hover:brightness-110 transition-all"
-          >
-            Send it
-            <span className="inline-block animate-bounce">🚀</span>
-          </button>
           <div className="absolute -bottom-8 left-40 w-28 h-28 bg-purple-500 blur-3xl rounded-full opacity-20 z-10" />
         </div>
 
@@ -95,7 +209,7 @@ export default function Admission() {
           {/* <div className="absolute bottom-90 right-40 w-28 h-28 bg-purple-500 blur-3xl rounded-full opacity-30 z-1" /> */}
 
           <img
-            src="https://img.freepik.com/free-photo/front-view-woman-working-desk-while-wearing-headset-looking-laptop_23-2148434727.jpg?uid=R160032739&ga=GA1.1.1208105082.1712396076&semt=ais_hybrid&w=740"
+            src={BACKEND_URL + LeadingSolution?.image}
             alt="Robot"
             className="max-w-full object-contain md:rounded-r-xl md:rounded-l-none rounded-xl"
             data-aos="fade-up"
@@ -123,7 +237,7 @@ export default function Admission() {
             </li>
             <li className="flex items-start gap-2 text-left">
               <IoIosMail className="relative top-1 text-fuchsia-600" />
-              exeduone@gmail.in
+              exeduone@gmail.com
             </li>
           </ul>
         </div>

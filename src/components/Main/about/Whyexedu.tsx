@@ -1,6 +1,18 @@
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import Loader from "../../common/Loader";
+import type { SectionImage } from "../../../api/types";
+const Whyexedu = () => {
 
-function Whyexedu() {
+  const { sectionImages, loading, error } = useSectionImages();
 
+  const whyImage: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "why_us"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  if (loading) return <Loader />;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!whyImage) return <div>No image found for this section.</div>;
 
   return (
     <div className="bg-[#F4F7FB] ">
@@ -32,10 +44,10 @@ function Whyexedu() {
         </div>
         <div className="md:w-1/3 pt-5 md:pt-0" data-aos="fade-up">
             <img
-              src="/why_choos.jpg"
-              alt=""
+              src={BACKEND_URL + whyImage.image}
               width={500}
               height={500}
+              alt="no image"
               className="md:w-[80%] w-[90%] mx-auto rounded-2xl"
             />
         </div>

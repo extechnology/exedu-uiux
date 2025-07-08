@@ -109,7 +109,12 @@ const Footer: React.FC = () => {
           <div className="">
             {/* <img src="/EX_TECHNOLOGY_LOGO-01.png" alt="" height={70} width={70} /> */}
             <p className="text-sm font-light text-gray-300">
-              Our Parent Company is <span className="font-bold pl-1">exmedia</span>
+              Our Parent Company is{" "}
+              <span className="font-bold pl-1">
+                <a target="_blank" rel="noopener noreferrer" href="https://exmedia.in/">
+                  exmedia
+                </a>
+              </span>
             </p>
           </div>
           <div className="relative flex md:justify-center">

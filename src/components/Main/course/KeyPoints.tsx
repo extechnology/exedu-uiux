@@ -1,16 +1,25 @@
-// import { Check } from "lucide-react"; 
+import React from "react";
+import type { CourseProps } from "../../../api/types";
+import useSinglePage from "../../../hooks/useSinglePage";
 
-const KeyPoints = () => {
-  const items = [
-    "Brand Identity Designer",
-    "Packaging Designer",
-    "Print And Publication Designer",
-    "Product Designer",
-    "Visual Storyteller",
-    "Brand Identity Designer",
-    "Environmental Graphic Designer",
-    "Brand Identity Designer",
-  ];
+const KeyPoints: React.FC<CourseProps> = ({ course }) => {
+  const { singlePage } = useSinglePage();
+  const detail = Array.isArray(singlePage)
+    ? singlePage.find((item) => item.title === course)
+    : null;
+  console.log(course, "courseName keypoints");
+  console.log(detail, "detail keypoints");
+  console.log(singlePage, "singlePage keypoints");
+
+  {
+    /** Extract and split keyPoints into 2 columns */
+  }
+  const keyPointsArray = detail?.keyPoints?.split("#") ?? [];
+  const midpoint = Math.ceil(keyPointsArray.length / 2);
+  const firstColumn = keyPointsArray.slice(0, midpoint);
+  const secondColumn = keyPointsArray.slice(midpoint);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
   return (
     <section className="bg-gray-200  py-10 mt-5 text-center">
@@ -22,7 +31,7 @@ const KeyPoints = () => {
 
       {/* Image */}
       <img
-        src="/graphic_design.jpg"
+        src={backendUrl + detail?.third_image}
         alt="Corporate Meeting"
         className="w-[95%] mx-auto mb-10 rounded shadow"
       />
@@ -32,7 +41,7 @@ const KeyPoints = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 text-left w-full relative md:left-30">
           {/* First column */}
           <ul className="space-y-3">
-            {items.map((item, index) => (
+            {firstColumn.map((item: string, index: number) => (
               <li
                 key={index}
                 className="flex items-center gap-2 text-sm md:text-base"
@@ -45,7 +54,7 @@ const KeyPoints = () => {
 
           {/* Second column */}
           <ul className="space-y-3">
-            {items.map((item, index) => (
+            {secondColumn.map((item: string, index: number) => (
               <li
                 key={index + 100}
                 className="flex items-center gap-2 text-sm md:text-base"

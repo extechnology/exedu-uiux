@@ -1,9 +1,30 @@
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
+import { useSectionImages } from "../../../hooks/useSectionImages";
+import Loader from "../../common/Loader";
+import type { SectionImage } from "../../../api/types";
+
+
 const AboutMain = () => {
+
+  const { sectionImages, loading, error } = useSectionImages();
+
+  const aboutImage: SectionImage | undefined = sectionImages.find(
+    (img: SectionImage) => img.section === "about_us"
+  );
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const style: React.CSSProperties = {
+    backgroundImage: aboutImage
+      ? `url(${BACKEND_URL}${aboutImage.image})`
+      : "",
+  }
+  if (loading) return <Loader />;
+  if (error) return <div>Error:{error.message}</div>;
   return (
     <div>
-      <div className="bg-[#F4F7FB] bg-[url('/about_us_bg.jpg')] pt-36 pb-32 bg-no-repeat bg-cover">
+      <div style={style} className="bg-[#F4F7FB]  pt-36 pb-32 bg-no-repeat bg-cover">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 justify-center content-center text-white">
           <div className="content-end py-10 relative md:top-18 px-5">
             <div data-aos="fade-up" data-aos-duration="900">
