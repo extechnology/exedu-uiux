@@ -13,12 +13,18 @@ import axiosInstance from "../api/axios";
 import SectionEditModal from "./ProfileForm";
 import EducationEditModal from "./EducationModal";
 import ImageEditModal from "./EditImage";
+import useCertificate from "../hooks/useCertificate";
+import { IoIosAddCircle } from "react-icons/io";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   // const [profile, setProfile] = useState<Profile | null>(null);
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
     null
   );
+
+  const certificate = useCertificate();
+  console.log(certificate, "certificate");
   const [editingSection, setEditingSection] = useState<
     "phone" | "education" | "career" | null
   >(null);
@@ -37,6 +43,12 @@ const Profile = () => {
     fieldName: string;
     value?: string;
   }>(null);
+  const uniqueId = profile?.unique_id;
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
+
+  console.log(uniqueId, "uniqueId");
 
   console.log(profile, "profile");
   console.log(userId, "userId in profile");
@@ -48,6 +60,8 @@ const Profile = () => {
   const handleClick = () => {
     setOpenModal(true);
   };
+
+
 
   const handleSave = async (formData: FormData) => {
     if (!userId) {
@@ -316,72 +330,104 @@ const Profile = () => {
                 <AttendanceTracker />
               </div>
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
-                <h1 className="mb-6">
+                <h1 className="mb-6 flex justify-between">
                   <span className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
                     Certificates
                   </span>
+                  <span
+                    onClick={() => setShowAddModal(true)}
+                    className="cursor-pointer"
+                  >
+                    <IoIosAddCircle className="w-6 h-6 text-violet-500" />
+                  </span>
                 </h1>
 
-                {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                  {profile?.certificates.map((cert) => (
-                    <div
-                      key={cert.id}
-                      className="flex flex-col items-center cursor-pointer"
-                      onClick={() => setSelectedCert(cert)}
-                    >
-                      <img
-                        src={cert.file}
-                        alt={cert.description}
-                        width={200}
-                        height={140}
-                        className="w-[75%] shadow-md"
-                      />
-                      <h1 className="mt-2 text-sm font-medium">
-                        {cert.description}
-                      </h1>
-                    </div>
-                  ))}
+                {Array.isArray(certificate?.certificate) && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    {certificate.certificate.map((cert) => {
+                      const isPDF = cert.certificate_file
+                        .toLowerCase()
+                        .endsWith(".pdf");
 
-                  {Array.from({
-                    length: Math.max(
-                      0,
-                      3 - (profile?.certificates?.length ?? 0)
-                    ),
-                  }).map((_, index) => (
-                    <div
-                      key={`dummy-${index}`}
-                      className="flex flex-col items-center opacity-50 pointer-events-none"
-                    >
-                      <img
-                        src="/quality.png"
-                        alt="Dummy Certificate"
-                        width={200}
-                        height={140}
-                        className="w-[75%]"
-                      />
-                      <h1 className="mt-2 text-sm font-medium">
-                        Certificate Placeholder
-                      </h1>
-                    </div>
-                  ))}
-                </div> */}
+                      return (
+                        <div
+                          key={cert.id}
+                          className="flex flex-col items-center cursor-pointer"
+                          onClick={() => setSelectedCert(cert)}
+                        >
+                          {isPDF ? (
+                            <img
+                              src="/pdf-icon.png" // PDF thumbnail icon
+                              alt="PDF File"
+                              width={200}
+                              height={140}
+                              className="w-[75%] shadow-md object-contain"
+                            />
+                          ) : (
+                            <img
+                              src={`${backendUrl}${cert.certificate_file}`}
+                              alt={cert.description}
+                              width={200}
+                              height={140}
+                              className="w-[70%] shadow-md object-cover"
+                            />
+                          )}
+                          <h1 className="mt-2 text-sm font-medium">
+                            {cert.description}
+                          </h1>
+                        </div>
+                      );
+                    })}
+
+                    {/* Placeholder slots to make minimum 3 cards */}
+                    {Array.from({
+                      length: Math.max(0, 3 - certificate.certificate.length),
+                    }).map((_, index) => (
+                      <div
+                        key={`dummy-${index}`}
+                        className="flex flex-col items-center opacity-50 pointer-events-none"
+                      >
+                        <img
+                          src="/quality.png"
+                          alt="Dummy Certificate"
+                          width={200}
+                          height={140}
+                          className="w-[75%]"
+                        />
+                        <h1 className="mt-2 text-sm font-medium">
+                          Certificate Placeholder
+                        </h1>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {selectedCert && (
                   <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-lg flex items-center justify-center z-50">
-                    <div className="bg-white p-4 rounded-lg overflow-auto relative">
+                    <div className="bg-white p-4 rounded-lg overflow-auto relative max-w-3xl w-full max-h-[90vh]">
                       <button
                         onClick={() => setSelectedCert(null)}
                         className="absolute top-2 right-2 text-xl font-bold text-gray-500 hover:text-black"
                       >
                         &times;
                       </button>
-                      <img
-                        src={selectedCert.file}
-                        alt={selectedCert.description}
-                        width={800}
-                        height={600}
-                        className="rounded-md w-[95%] mx-auto "
-                      />
+
+                      {selectedCert.certificate_file
+                        .toLowerCase()
+                        .endsWith(".pdf") ? (
+                        <iframe
+                          src={`${backendUrl}${selectedCert.certificate_file}`}
+                          title="PDF Viewer"
+                          className="w-full h-[80vh] rounded-md"
+                        />
+                      ) : (
+                        <img
+                          src={`${backendUrl}${selectedCert.certificate_file}`}
+                          alt={selectedCert.description}
+                          className="rounded-md w-full h-auto"
+                        />
+                      )}
+
                       <h2 className="text-center mt-2 text-base font-semibold">
                         {selectedCert.description}
                       </h2>
@@ -408,12 +454,6 @@ const Profile = () => {
           )}
         </div>
       </main>
-      {/* <ProfileModal
-        initialProfile={profile}
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-        onSubmit={handleSave}
-      /> */}
       <div>
         {openEducationModal && profile && (
           <EducationEditModal
@@ -451,6 +491,67 @@ const Profile = () => {
           />
         )}
       </div>
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md relative">
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-2 right-3 text-xl font-bold text-gray-500 hover:text-black"
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Upload Certificate</h2>
+
+            <input
+            title="Select a file"
+              type="file"
+              accept=".jpg,.jpeg,.png,.pdf"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="mb-3"
+            />
+
+            <input
+              type="text"
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 border rounded mb-4"
+            />
+
+            <button
+              className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700"
+              onClick={async () => {
+                if (!file || !description) {
+                  alert("Please select a file and enter a description.");
+                  return;
+                }
+
+                const formData = new FormData();
+                formData.append("certificate_file", file);
+                formData.append("description", description);
+                formData.append("profile", profile?.unique_id!);
+
+                try {
+                  await axiosInstance.post("/certificate/", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  });
+                  toast.success("Certificate added successfully");
+                  setShowAddModal(false);
+                  setFile(null);
+                  setDescription("");
+                  // Optional: Refresh certificate list
+                  window.location.reload();
+                } catch (err) {
+                  console.error(err);
+                  toast.error("Failed to upload certificate");
+                }
+              }}
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

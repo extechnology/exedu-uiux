@@ -104,7 +104,7 @@ export interface ProfileModalProps {
 
 export type StudentCertificates = {
   id: number;
-  file: string;
+  certificate_file: string;
   description: string;
   profile: number;
 };

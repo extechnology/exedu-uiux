@@ -171,8 +171,17 @@ const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
             <h2 className="text-lg font-semibold flex justify-between text-gray-800 mb-2">
               <span>{title}</span>
             </h2>
-            <ul className="text-sm md:text-base text-gray-700 space-y-2 text-left pt-3">
-              {isSkills ? renderList(items, maxVisible) : renderList(items)}
+            <ul className="flex flex-wrap gap-2 pt-2 justify-center">
+              {items?.split(",").map((item, idx) => (
+                <li
+                  key={idx}
+                  className="bg-white shadow-sm px-3 py-1 text-sm rounded-full text-gray-700 border border-gray-200"
+                >
+                  {item.trim()}
+                </li>
+              )) || (
+                <li className="text-gray-400 text-sm">No data available</li>
+              )}
             </ul>
           </div>
         ))}
