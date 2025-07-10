@@ -6,7 +6,6 @@ import Skills from "../components/profile/SkillsSection";
 import { useState } from "react";
 import type { Profile, StudentCertificates } from "../api/types";
 import { PersonStanding } from "lucide-react";
-import { FcSupport } from "react-icons/fc";
 import { LucidePaperclip } from "lucide-react";
 import useProfile from "../hooks/useProfile";
 import axiosInstance from "../api/axios";
@@ -67,6 +66,7 @@ const Profile = () => {
     setOpenModal(true);
   };
 
+  console.log(handleClick)
 
 
   const handleSave = async (formData: FormData) => {

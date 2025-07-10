@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import { useSectionImages } from "../../../hooks/useSectionImages";
 import Loader from "../../common/Loader";
