@@ -1,7 +1,7 @@
 import { useSectionImages } from "../../../hooks/useSectionImages";
 import Loader from "../../common/Loader";
 import type { SectionImage } from "../../../api/types";
-
+import { Link } from "react-router-dom";
 
 function Mission() {
   const { sectionImages, loading, error } = useSectionImages();
@@ -51,9 +51,11 @@ function Mission() {
             data-aos="fade-up"
             className="pt-5 flex justify-center md:justify-start"
           >
-            <button className="p-4 text-white w-50 hover:w-70 transition-all duration-500 hover:bg-violet-700 rounded-2xl bg-violet-500 shadow-md">
-              Book Your Seat Now!
-            </button>
+            <Link to="/admission">
+              <button className="p-4 text-white w-50 hover:w-70 transition-all duration-500 hover:bg-violet-700 rounded-2xl bg-violet-500 shadow-md">
+                Book Your Seat Now!
+              </button>
+            </Link>
           </div>
         </div>
       </div>

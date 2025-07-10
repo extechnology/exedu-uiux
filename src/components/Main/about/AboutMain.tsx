@@ -24,7 +24,10 @@ const AboutMain = () => {
   if (error) return <div>Error:{error.message}</div>;
   return (
     <div>
-      <div style={style} className="bg-[#F4F7FB]  pt-36 pb-32 bg-no-repeat bg-cover">
+      <div
+        style={style}
+        className="bg-[#F4F7FB]  pt-36 pb-32 bg-no-repeat bg-cover"
+      >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 justify-center content-center text-white">
           <div className="content-end py-10 relative md:top-18 px-5">
             <div data-aos="fade-up" data-aos-duration="900">
@@ -52,7 +55,7 @@ const AboutMain = () => {
               data-aos="fade-up"
               data-aos-duration="1200"
             >
-              <Link to="/" className="w-full md:w-2/3">
+              <a href="https://wa.me/919072123466" target="_blank" rel="noreferrer noopener" className="w-full md:w-2/3">
                 <button className="flex items-center justify-center gap-3 md:gap-2 text-gray-700 font-semibold bg-gray-100 text-md rounded-lg shadow-lg py-4  hover:scale-105 transition-all duration-300 w-full">
                   <MessageCircle className="w-6 h-6 md:w-5 md:h-5 text-green-500" />
                   <p
@@ -63,7 +66,7 @@ const AboutMain = () => {
                     Chat with the Course Counselor now!
                   </p>
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>

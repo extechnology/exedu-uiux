@@ -123,13 +123,13 @@ const Footer: React.FC = () => {
           </div>
           <div className="relative  md:justify-center">
             <p
-              className="cursor-pointer text-center hover:text-gray-200 transition-all text-sm text-gray-300 font-light"
+              className="cursor-pointer md:text-center hover:text-gray-200 transition-all text-sm text-gray-300 font-light"
               onMouseEnter={() => setShowPopup(true)}
               onMouseLeave={() => setShowPopup(false)}
             >
               Copyright &copy; 2025 exedu. All rights reserved.
             </p>
-            <p className="text-sm text-center font-light text-gray-300">
+            <p className="text-sm md:text-center font-light text-gray-300">
               powered by{" "}
               <a href="https://extechnology.in" target="_blank" rel="noreferrer noopener">
                 <span className="font-bold pl-1">extechnology</span>

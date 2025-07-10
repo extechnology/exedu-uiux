@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,7 +16,32 @@ const Navbar = () => {
 
   const isLoggedIn = token !== null;
 
+  const mobileMenuRef = useRef<HTMLUListElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    if (showMobileMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMobileMenu]);
+
+
   const handleProfileClick = () => {
+    setShowMobileMenu(false);
     if (isLoggedIn && id) {
       navigate(`/profile/${id}`);
     } else {
@@ -141,6 +167,7 @@ const Navbar = () => {
       <AnimatePresence>
         {showMobileMenu && (
           <motion.ul
+            ref={mobileMenuRef}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -162,13 +189,55 @@ const Navbar = () => {
                 </Link>
               </motion.li>
             ))}
-            <div
-              onClick={handleProfileClick}
-              className="flex md:hidden w-50 items-center text-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer"
+            <motion.li
+              custom={navLinks.length}
+              variants={dropIn}
+              className="text-lg font-medium text-gray-700"
             >
-              <User className="mr-2 w-5" />
-              Profile
-            </div>
+              <div
+                onClick={handleProfileClick}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-full px-4 py-2 cursor-pointer shadow-md"
+              >
+                <User className="w-5 h-5" />
+                Profile
+              </div>
+            </motion.li>
+
+            {/* Auth Buttons */}
+            <motion.li
+              custom={navLinks.length + 1}
+              variants={dropIn}
+              className="text-lg font-medium text-gray-700"
+            >
+              {!isLoggedIn ? (
+                <div className="flex flex-col gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="block w-full text-center text-blue-600 border border-blue-600 rounded-full px-4 py-2 hover:bg-blue-50 transition"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="block w-full text-center text-green-600 border border-green-600 rounded-full px-4 py-2 hover:bg-green-50 transition"
+                  >
+                    Signup
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    handleLogout();
+                  }}
+                  className="block w-full text-center text-red-500 border border-red-500 rounded-full px-4 py-2 hover:bg-red-50 transition"
+                >
+                  Logout
+                </button>
+              )}
+            </motion.li>
           </motion.ul>
         )}
       </AnimatePresence>

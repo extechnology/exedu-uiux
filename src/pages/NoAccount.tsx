@@ -42,12 +42,12 @@ const NoAccount = () => {
         <h1 className="text-center text-xl md:text-2xl font-bold pt-4">
           Your Profile is Empty
         </h1>
-        <p className="pt-6 text-center md:w-1/3 px-2 md:px-0 mx-auto">
+        <p className="pt-6 text-center md:w-1/3 w-[92%] md:px-0 mx-auto">
           Create an Account to access your personalized dashboard with all your
           educational information in one place
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-3 md:px-0">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5 md:px-0">
         <div className="p-8 border-2 border-fuchsia-400 rounded-2xl shadow-lg shadow-fuchsia-300 space-y-4 hover:shadow-md hover:shadow-fuchsia-500 duration-300 transition-all hover:scale-105">
           <FaGraduationCap className="w-10 h-10  text-fuchsia-700 hover:-translate-x-2 duration-300 transition-all  " />
           <h1 className="text-2xl font-bold hover:-translate-y-1 duration-300 transition-all">
@@ -87,15 +87,6 @@ const NoAccount = () => {
           Create your Account
         </button>
       </div>
-      {/* {showModal && (
-        <ProfileModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSubmit={(formData: FormData) => console.log(formData)}
-          
-          // userId={null}
-        />
-      )} */}
     </div>
   );
 };

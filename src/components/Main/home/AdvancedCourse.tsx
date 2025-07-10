@@ -65,7 +65,7 @@ const AdvancedCourse = () => {
                 <Link to={"/course"}>
                   <button
                     type="button"
-                    className="relative group overflow-hidden text-sm md:text-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white font-bold px-8 py-3 rounded-lg"
+                    className="relative group cursor-pointer overflow-hidden text-sm md:text-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white font-bold px-8 py-3 rounded-lg"
                     data-aos="zoom-in-up"
                     data-aos-duration="1500"
                   >

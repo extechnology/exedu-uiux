@@ -142,7 +142,7 @@ const Register: React.FC = () => {
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full py-2 rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
+            className="w-full py-2 cursor-pointer rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
           >
             Sign up
           </button>
@@ -152,7 +152,7 @@ const Register: React.FC = () => {
         <div className="text-center text-gray-500 text-sm">Or</div>
 
         {/* Google Sign Up */}
-        <button className="w-full flex items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
+        <button className="w-full cursor-pointer flex items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
           <FcGoogle size={20} />
           <span className="text-gray-700">Sign up with Google</span>
         </button>

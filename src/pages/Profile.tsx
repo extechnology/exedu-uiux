@@ -132,10 +132,10 @@ const Profile = () => {
             <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
             <span>Supports</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded ">
+          {/* <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded ">
             <FcSupport className="bg-gray-200  rounded-full" />
             <span onClick={handleClick}>Edit Profile</span>
-          </li>
+          </li> */}
         </ul>
       </aside>
 

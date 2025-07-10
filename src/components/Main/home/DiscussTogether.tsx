@@ -1,7 +1,7 @@
 import { useSectionImages } from "../../../hooks/useSectionImages";
 import Loader from "../../common/Loader";
 import type { SectionImage } from "../../../api/types";
-// import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const DiscussTogether = () => {
   const { sectionImages, loading, error } = useSectionImages();
@@ -11,7 +11,6 @@ const DiscussTogether = () => {
   const discussImage: SectionImage | undefined = sectionImages.find(
     (img: SectionImage) => img.section === "discuss_together"
   );
-  
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -21,17 +20,12 @@ const DiscussTogether = () => {
       : "",
   };
 
-  
-
   if (loading) return <Loader />;
   if (error) return <div>Error:</div>;
   if (!discussImage) return <div>No image found for this section.</div>;
-   
+
   return (
-    <div
-      style={style}
-      className="relative h-[300px]  bg-cover bg-center"
-    >
+    <div style={style} className="relative h-[300px]  bg-cover bg-center">
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 z-0"></div>
 
@@ -44,14 +38,16 @@ const DiscussTogether = () => {
         >
           Let's Discuss About How We Can Help Make Your Career Better
         </h1>
-        <button
-          type="button"
-          className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white text-sm font-bold px-8 py-2 rounded-xl"
-          data-aos="zoom-in"
-          data-aos-duration="1200"
-        >
-          Let's Discuss Together
-        </button>
+        <Link to="/admission">
+          <button
+            type="button"
+            className="bg-fuchsia-500 hover:bg-fuchsia-700 text-white text-sm font-bold px-8 py-2 rounded-xl"
+            data-aos="zoom-in"
+            data-aos-duration="1200"
+          >
+            Let's Discuss Together
+          </button>
+        </Link>
       </div>
     </div>
   );

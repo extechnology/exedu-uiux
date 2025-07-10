@@ -15,7 +15,6 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
   console.log(detail, "detail enquire");
   console.log(singlePage, "singlePage enquire");
 
-
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -73,8 +72,7 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
     }
   };
 
-
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -146,9 +144,15 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
           )}
         </form>
         <div className="flex justify-between items-center mt-6 text-sm text-gray-700">
-          <button className="hover:underline">
-            Chat with course counselor
-          </button>
+          <a
+            href="https://wa.me/919072123466"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <button className="hover:underline">
+              Chat with course counselor
+            </button>
+          </a>
           <button className="hover:underline">Download Brochure</button>
         </div>
       </div>

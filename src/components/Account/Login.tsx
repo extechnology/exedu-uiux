@@ -76,17 +76,17 @@ const Login: React.FC = () => {
               placeholder="At least 8 characters"
               className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
-            <div className="text-right mt-1">
+            {/* <div className="text-right mt-1">
               <a href="#" className="text-sm text-blue-600 hover:underline">
                 Forgot Password?
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Sign In Button */}
           <button
             type="submit"
-            className="w-full py-2 rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
+            className="w-full py-2 cursor-pointer rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
           >
             Sign in
           </button>
@@ -96,7 +96,7 @@ const Login: React.FC = () => {
         <div className="text-center text-gray-500 text-sm">Or</div>
 
         {/* Google Login */}
-        <button className="w-full flex items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
+        <button className="w-full flex cursor-pointer items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
           <FcGoogle size={20} />
           <span className="text-gray-700">Sign in with Google</span>
         </button>
