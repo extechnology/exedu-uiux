@@ -364,8 +364,8 @@ const Profile = () => {
                           <div className="aspect-[4/3] bg-gray-50 flex items-center justify-center p-4">
                             {isPDF ? (
                               <div className="text-center p-4">
-                                <div className="mx-auto bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mb-3">
-                                  <FiFileText className="w-8 h-8 text-red-500" />
+                                <div className="mx-auto bg-red-50 w-14 h-14 rounded-full flex items-center justify-center mb-3">
+                                  <FiFileText className="w-7 h-7 text-red-500" />
                                 </div>
                                 <span className="text-xs font-medium text-gray-500">
                                   PDF Document
