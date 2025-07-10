@@ -35,6 +35,9 @@ const Profile = () => {
   const [openEducationModal, setOpenEducationModal] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
 
+  console.log(editingSection)
+  console.log(openModal)
+
   // const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("id");
   const username = localStorage.getItem("username");

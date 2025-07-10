@@ -8,8 +8,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const NoAccount = () => {
   const [showModal, setShowModal] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
+  console.log(showModal)
   const handleProfileClick = () => {
     if (!token) {
       navigate("/login", {

@@ -13,12 +13,14 @@ type SkillsProps = {
 const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
   const maxVisible = 5;
   const [skillsExpanded, setSkillsExpanded] = useState(false);
+  console.log(maxVisible)
 
   const renderList = (data?: string | null, limit?: number) => {
     if (!data) return <li className="text-gray-400">No data available</li>;
     const items = data.split(",").map((item) => item.trim());
     const visibleItems =
       limit && !skillsExpanded ? items.slice(0, limit) : items;
+      console.log(renderList)
 
     return (
       <>
@@ -144,7 +146,7 @@ const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
             items: interests,
             isSkills: false,
           },
-        ].map(({ title, icon, color, items, isSkills }, i) => (
+        ].map(({ title, icon, color, items }, i) => (
           <div
             key={i}
             className="relative bg-white/60 backdrop-blur-md border border-white/30 rounded-3xl p-6 shadow-md hover:shadow-2xl transition-all duration-300 group flex flex-col h-full"
