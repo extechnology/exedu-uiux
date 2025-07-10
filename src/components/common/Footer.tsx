@@ -111,19 +111,29 @@ const Footer: React.FC = () => {
             <p className="text-sm font-light text-gray-300">
               Our Parent Company is{" "}
               <span className="font-bold pl-1">
-                <a target="_blank" rel="noopener noreferrer" href="https://exmedia.in/">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://exmedia.in/"
+                >
                   exmedia
                 </a>
               </span>
             </p>
           </div>
-          <div className="relative flex md:justify-center">
+          <div className="relative  md:justify-center">
             <p
-              className="cursor-pointer hover:text-gray-200 transition-all text-sm text-gray-300 font-light"
+              className="cursor-pointer text-center hover:text-gray-200 transition-all text-sm text-gray-300 font-light"
               onMouseEnter={() => setShowPopup(true)}
               onMouseLeave={() => setShowPopup(false)}
             >
               Copyright &copy; 2025 exedu. All rights reserved.
+            </p>
+            <p className="text-sm text-center font-light text-gray-300">
+              powered by{" "}
+              <a href="https://extechnology.in" target="_blank" rel="noreferrer noopener">
+                <span className="font-bold pl-1">extechnology</span>
+              </a>
             </p>
 
             <AnimatePresence>

@@ -16,6 +16,9 @@ import ImageEditModal from "./EditImage";
 import useCertificate from "../hooks/useCertificate";
 import { IoIosAddCircle } from "react-icons/io";
 import toast from "react-hot-toast";
+import { FiFileText } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { FiAward } from "react-icons/fi";
 
 const Profile = () => {
   // const [profile, setProfile] = useState<Profile | null>(null);
@@ -330,20 +333,23 @@ const Profile = () => {
                 <AttendanceTracker />
               </div>
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
-                <h1 className="mb-6 flex justify-between">
-                  <span className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
-                    Certificates
-                  </span>
-                  <span
+                {/* Header */}
+                <div className="mb-8 flex justify-between items-center">
+                  <h2 className="md:text-xl text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                    My Certifications
+                  </h2>
+                  <button
                     onClick={() => setShowAddModal(true)}
-                    className="cursor-pointer"
+                    className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm"
                   >
-                    <IoIosAddCircle className="w-6 h-6 text-violet-500" />
-                  </span>
-                </h1>
+                    <IoIosAddCircle className="w-5 h-5" />
+                    <span className="text-sm font-medium">Add New</span>
+                  </button>
+                </div>
 
+                {/* Certificates Grid */}
                 {Array.isArray(certificate?.certificate) && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {certificate.certificate.map((cert) => {
                       const isPDF = cert.certificate_file
                         .toLowerCase()
@@ -352,85 +358,111 @@ const Profile = () => {
                       return (
                         <div
                           key={cert.id}
-                          className="flex flex-col items-center cursor-pointer"
                           onClick={() => setSelectedCert(cert)}
+                          className="group relative overflow-hidden rounded-xl border border-gray-100 hover:border-violet-200 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
                         >
-                          {isPDF ? (
-                            <img
-                              src="/pdf-icon.png" // PDF thumbnail icon
-                              alt="PDF File"
-                              width={200}
-                              height={140}
-                              className="w-[75%] shadow-md object-contain"
-                            />
-                          ) : (
-                            <img
-                              src={`${backendUrl}${cert.certificate_file}`}
-                              alt={cert.description}
-                              width={200}
-                              height={140}
-                              className="w-[70%] shadow-md object-cover"
-                            />
-                          )}
-                          <h1 className="mt-2 text-sm font-medium">
-                            {cert.description}
-                          </h1>
+                          <div className="aspect-[4/3] bg-gray-50 flex items-center justify-center p-4">
+                            {isPDF ? (
+                              <div className="text-center p-4">
+                                <div className="mx-auto bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mb-3">
+                                  <FiFileText className="w-8 h-8 text-red-500" />
+                                </div>
+                                <span className="text-xs font-medium text-gray-500">
+                                  PDF Document
+                                </span>
+                              </div>
+                            ) : (
+                              <img
+                                src={`${backendUrl}${cert.certificate_file}`}
+                                alt={cert.description}
+                                className="w-full h-full object-contain"
+                              />
+                            )}
+                          </div>
+                          <div className="p-4 bg-white">
+                            <h3 className="font-medium text-gray-900 line-clamp-1">
+                              {cert.description}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {isPDF ? "PDF File" : "Image Certificate"}
+                            </p>
+                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                            <span className="text-white text-sm font-medium">
+                              View Details
+                            </span>
+                          </div>
                         </div>
                       );
                     })}
 
-                    {/* Placeholder slots to make minimum 3 cards */}
-                    {Array.from({
-                      length: Math.max(0, 3 - certificate.certificate.length),
-                    }).map((_, index) => (
-                      <div
-                        key={`dummy-${index}`}
-                        className="flex flex-col items-center opacity-50 pointer-events-none"
-                      >
-                        <img
-                          src="/quality.png"
-                          alt="Dummy Certificate"
-                          width={200}
-                          height={140}
-                          className="w-[75%]"
-                        />
-                        <h1 className="mt-2 text-sm font-medium">
-                          Certificate Placeholder
-                        </h1>
-                      </div>
-                    ))}
+                    {/* Empty states - only show if less than 3 certificates */}
+                    {certificate.certificate.length < 3 &&
+                      Array.from({
+                        length: 3 - certificate.certificate.length,
+                      }).map((_, index) => (
+                        <div
+                          key={`empty-${index}`}
+                          className="border-2 border-dashed border-gray-200 rounded-xl aspect-[4/3] flex flex-col items-center justify-center p-6 text-center"
+                        >
+                          <div className="w-12 h-12 bg-violet-50 rounded-full flex items-center justify-center mb-3">
+                            <FiAward className="w-5 h-5 text-violet-400" />
+                          </div>
+                          <h3 className="text-sm font-medium text-gray-500">
+                            Add Certificate
+                          </h3>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Upload your certification files
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 )}
 
+                {/* Certificate Modal */}
                 {selectedCert && (
-                  <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-lg flex items-center justify-center z-50">
-                    <div className="bg-white p-4 rounded-lg overflow-auto relative max-w-3xl w-full max-h-[90vh]">
-                      <button
-                        onClick={() => setSelectedCert(null)}
-                        className="absolute top-2 right-2 text-xl font-bold text-gray-500 hover:text-black"
-                      >
-                        &times;
-                      </button>
+                  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl overflow-hidden shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+                      <div className="flex justify-between items-center p-4 border-b">
+                        <h3 className="font-semibold text-lg">
+                          {selectedCert.description}
+                        </h3>
+                        <button
+                        title="Close"
+                          onClick={() => setSelectedCert(null)}
+                          className="p-1 rounded-full hover:bg-gray-100"
+                        >
+                          <FiX className="w-5 h-5 text-gray-500" />
+                        </button>
+                      </div>
 
-                      {selectedCert.certificate_file
-                        .toLowerCase()
-                        .endsWith(".pdf") ? (
-                        <iframe
-                          src={`${backendUrl}${selectedCert.certificate_file}`}
-                          title="PDF Viewer"
-                          className="w-full h-[80vh] rounded-md"
-                        />
-                      ) : (
-                        <img
-                          src={`${backendUrl}${selectedCert.certificate_file}`}
-                          alt={selectedCert.description}
-                          className="rounded-md w-full h-auto"
-                        />
-                      )}
+                      <div className="flex-1 overflow-auto p-4">
+                        {selectedCert.certificate_file
+                          .toLowerCase()
+                          .endsWith(".pdf") ? (
+                          <iframe
+                            src={`${backendUrl}${selectedCert.certificate_file}`}
+                            title="PDF Viewer"
+                            className="w-full h-full min-h-[70vh] rounded-md border"
+                          />
+                        ) : (
+                          <img
+                            src={`${backendUrl}${selectedCert.certificate_file}`}
+                            alt={selectedCert.description}
+                            className="rounded-md w-full h-auto max-h-[70vh] object-contain mx-auto"
+                          />
+                        )}
+                      </div>
 
-                      <h2 className="text-center mt-2 text-base font-semibold">
-                        {selectedCert.description}
-                      </h2>
+                      <div className="p-4 border-t flex justify-end">
+                        <a
+                          href={`${backendUrl}${selectedCert.certificate_file}`}
+                          download
+                          className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600 text-sm font-medium"
+                        >
+                          Download Certificate
+                        </a>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -503,7 +535,7 @@ const Profile = () => {
             <h2 className="text-lg font-semibold mb-4">Upload Certificate</h2>
 
             <input
-            title="Select a file"
+              title="Select a file"
               type="file"
               accept=".jpg,.jpeg,.png,.pdf"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
