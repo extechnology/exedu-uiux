@@ -32,6 +32,14 @@ export interface verifyOtpRequest {
   password: string;
 }
 
+export interface AuthResponse {
+  access: string;
+  refresh: string;
+  username: string;
+  email: string;
+  user_id: number;
+}
+
 export interface SectionImage {
   id: number;
   section: string;
@@ -109,11 +117,16 @@ export type StudentCertificates = {
   profile: number;
 };
 
-export interface Profile  {
+export interface Profile {
   id: number;
   certificates: StudentCertificates[];
   unique_id: string;
   name: string;
+  user: {
+    username: string;
+    email: string;
+  };
+  username: string;
   email: string;
   profile_image: string;
   clerk_user_id: string;
@@ -127,4 +140,5 @@ export interface Profile  {
   skills: string;
   experience: string;
   interests: string;
+  is_public: boolean;
 };

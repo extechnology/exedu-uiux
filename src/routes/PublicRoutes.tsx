@@ -15,6 +15,7 @@ const Terms = lazy(() => import("../pages/Terms"));
 const CourseSingle = lazy(() => import("../pages/CourseSinglePage"));
 const NoAccount = lazy(() => import("../pages/NoAccount"));
 const Profile = lazy(() => import("../pages/Profile"));
+const PublicProfile = lazy(() => import("../pages/PublicProfile"));
 
 const PublicRoutes = () => (
   <>
@@ -29,6 +30,7 @@ const PublicRoutes = () => (
       <Route path="/single/:id" element={<CourseSingle />} />
       <Route path="/no-account" element={<NoAccount />} />
       <Route path="/profile/:id" element={<Profile />} />
+      <Route path="/profile/public/:uniqueId" element={<PublicProfile />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
     </Route>

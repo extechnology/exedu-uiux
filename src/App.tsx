@@ -9,6 +9,8 @@ import "./App.css";
 import Loader from "./components/common/Loader";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import WhatsAppButton from "./components/common/WhatsApp";
 
 const App = () => {
   useEffect(() => {
@@ -20,15 +22,18 @@ const App = () => {
 
   return (
     <Router>
-      <Toaster position="top-center" reverseOrder={false} />
-      <ScrollToTop />
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {PublicRoutes()}
-          {AdminRoutes()}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <Toaster position="top-center" reverseOrder={false} />
+        <ScrollToTop />
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            {PublicRoutes()}
+            {AdminRoutes()}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+        <WhatsAppButton />
+      </GoogleOAuthProvider>
     </Router>
   );
 };

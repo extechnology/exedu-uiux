@@ -47,9 +47,9 @@ const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-4">
       {/* Mobile View */}
-      <div className="md:hidden px-4">
+      <div className="md:hidden">
         <Swiper
           modules={[Pagination]}
           spaceBetween={16}
@@ -80,8 +80,8 @@ const Skills = ({ skills, experience, interests, onEdit }: SkillsProps) => {
               items: interests,
             },
           ].map(({ title, icon, bg, color, items }, index) => (
-            <SwiperSlide key={index}>
-              <div className="group min-h-[320px] flex flex-col justify-start p-5 bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+            <SwiperSlide key={index} className="mr-0 content-center ">
+              <div className="group min-h-[320px] flex my-4 flex-col justify-start p-3 content-center bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 text-center">
                 <div
                   className={`w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-xl ${bg} group-hover:scale-110 transition-transform`}
                 >

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/Authservices";
 import toast from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
+import type { CredentialResponse } from "@react-oauth/google";
+import { loginWithGoogle } from "../../services/Authservices";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -21,14 +23,11 @@ const Login: React.FC = () => {
       localStorage.setItem("email", response.email);
       localStorage.setItem("id", response.user_id);
 
-
       console.log("Login successful:", response);
-      navigate( "/");
-
+      navigate("/");
     } catch (error: any) {
       console.error("Login failed:", error);
       toast.error(error.response?.data?.detail || "Invalid email or password.");
-      
     }
   };
 
@@ -44,12 +43,10 @@ const Login: React.FC = () => {
           />
           <p className="text-xs text-gray-500">Hybrid AI Education</p>
         </div>
-
         {/* Heading */}
         <h2 className="text-2xl font-semibold text-gray-800 text-center">
           Welcome Back <span className="inline-block">👋</span>
         </h2>
-
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Email */}
           <div>
@@ -91,16 +88,37 @@ const Login: React.FC = () => {
             Sign in
           </button>
         </form>
-
         {/* Divider */}
         <div className="text-center text-gray-500 text-sm">Or</div>
-
         {/* Google Login */}
-        <button className="w-full flex cursor-pointer items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
-          <FcGoogle size={20} />
-          <span className="text-gray-700">Sign in with Google</span>
-        </button>
+        <div className="w-full flex justify-center">
+          <GoogleLogin
+            onSuccess={async (credentialResponse: CredentialResponse) => {
+              const token = credentialResponse?.credential;
 
+              if (!token) {
+                toast.error("Google credential is missing.");
+                return;
+              }
+
+              try {
+                const response = await loginWithGoogle(token);
+
+                localStorage.setItem("accessToken", response.access);
+                localStorage.setItem("refreshToken", response.refresh);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("email", response.email);
+                localStorage.setItem("id", `${response.user_id}`);
+
+                toast.success("Logged in with Google!");
+                navigate("/");
+              } catch (err: any) {
+                toast.error("Google login failed.");
+                console.error(err);
+              }
+            }}
+          />
+        </div>
         {/* Sign Up Prompt */}
         <p className="text-center text-sm text-gray-700">
           Don't you have an account?{" "}

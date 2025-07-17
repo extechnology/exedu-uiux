@@ -35,7 +35,10 @@ const CourseDetails = () => {
           {/* Text Content */}
           <div className="flex-1 content-center px-5 md:px-0">
             <h1 className="md:text-4xl text-2xl font-bold text-center">
-              {detail.title}
+              {detail.title
+                .split("_")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}
             </h1>
 
             <div className="py-5 text-center">

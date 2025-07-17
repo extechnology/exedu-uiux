@@ -3,7 +3,7 @@ import AttendanceTracker from "../components/profile/AttendanceTracker";
 import ProgressSection from "../components/profile/ProgressSection";
 import { FaMobile, FaPaypal, FaEdit } from "react-icons/fa";
 import Skills from "../components/profile/SkillsSection";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Profile, StudentCertificates } from "../api/types";
 import { PersonStanding } from "lucide-react";
 import { LucidePaperclip } from "lucide-react";
@@ -18,43 +18,123 @@ import toast from "react-hot-toast";
 import { FiFileText } from "react-icons/fi";
 import { FiX } from "react-icons/fi";
 import { FiAward } from "react-icons/fi";
+import axios from "axios";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  TwitterShareButton,
+  TelegramShareButton,
+  FacebookIcon,
+  WhatsappIcon,
+  TelegramIcon,
+  LinkedinIcon,
+  LinkedinShareButton,
+} from "react-share";
+import {
+  GlobeAltIcon,
+  LockClosedIcon,
+  ShareIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
+import { FaXTwitter } from "react-icons/fa6";
+import axiosPublic from "../api/axiosPublic";
 
 const Profile = () => {
-  // const [profile, setProfile] = useState<Profile | null>(null);
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
     null
   );
-
   const certificate = useCertificate();
-  console.log(certificate, "certificate");
   const [editingSection, setEditingSection] = useState<
     "phone" | "education" | "career" | null
   >(null);
   const [openModal, setOpenModal] = useState(false);
   const [openEducationModal, setOpenEducationModal] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
-
-  console.log(editingSection)
-  console.log(openModal)
-
-  // const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("id");
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
   const { profile, loading, error } = useProfile(userId!);
+  const [localProfile, setLocalProfile] = useState(profile);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [editingField, setEditingField] = useState<null | {
     fieldKey: string;
     fieldName: string;
     value?: string;
   }>(null);
-  const uniqueId = profile?.unique_id;
+  const uniqueId = localProfile?.unique_id;
   const [showAddModal, setShowAddModal] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [updatingVisibility, setUpdatingVisibility] = useState(false);
+  useEffect(() => {
+    if (profile?.is_public !== undefined) {
+      setIsPublic(profile.is_public);
+    }
+  }, [profile]);
+  console.log("Current isPublic state:", isPublic);
+
+  console.log(editingSection);
+  console.log(openModal);
+  console.log(certificate, "certificate");
+
+  useEffect(() => {
+    setLocalProfile(profile);
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile?.is_public !== undefined) {
+      setIsPublic(profile.is_public);
+    }
+  }, [profile?.is_public]);
+
+  const handleToggleVisibility = async () => {
+    if (!uniqueId) return;
+
+    const newStatus = !isPublic;
+
+    setUpdatingVisibility(true);
+    setIsPublic(newStatus); 
+
+    try {
+      const res = await axiosPublic.put(`/public-profile/${uniqueId}/`, {
+        is_public: newStatus,
+      });
+
+      const confirmedStatus = res.data.is_public;
+      console.log("Confirmed status:", confirmedStatus);
+
+      setIsPublic(confirmedStatus);
+      setLocalProfile((prev: any) => ({
+        ...prev,
+        is_public: confirmedStatus,
+      }));
+
+      toast.success(`Profile is now ${confirmedStatus ? "public" : "private"}`);
+    } catch (err) {
+      setIsPublic(!newStatus); // Revert on failure
+      toast.error("Something went wrong while updating your profile status.");
+    } finally {
+      setUpdatingVisibility(false);
+    }
+  };
+
+  // const handleShare = () => {
+  //   const publicUrl = `${window.location.origin}/profile/public/${profile?.unique_id}`;
+  //   navigator.clipboard.writeText(publicUrl);
+  //   toast.success("Profile link copied!");
+  //   setShowShareModal(true);
+  // };
+
+  const handleShare = () => {
+    const metaPreviewUrl = `${window.location.origin}/profile/public/${profile?.unique_id}`;
+    navigator.clipboard.writeText(metaPreviewUrl);
+    toast.success("Shareable profile link copied!");
+    setShowShareModal(true);
+  };
 
   console.log(uniqueId, "uniqueId");
-
   console.log(profile, "profile");
   console.log(userId, "userId in profile");
 
@@ -66,12 +146,11 @@ const Profile = () => {
     setOpenModal(true);
   };
 
-  console.log(handleClick)
-
+  console.log(handleClick);
 
   const handleSave = async (formData: FormData) => {
     if (!userId) {
-      console.error("Profile userId is missing again");
+      console.error("Profile userId is missing ");
       return;
     }
 
@@ -106,9 +185,9 @@ const Profile = () => {
     <div className="flex bg-gray-100 pt-18 overflow-x-hidden">
       {/* Sidebar */}
       <aside className="w-64 hidden md:block fixed top-0 left-0 h-screen mt-17 bg-gray-200 shadow-md p-5 overflow-y-auto z-30">
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <img src="/ex_edu_logo-03.png" alt="" className="p-2" />
-        </div>
+        </div> */}
         <ul className="mt-8 space-y-4 cursor-pointer">
           <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
             <FaUser />
@@ -132,10 +211,80 @@ const Profile = () => {
             <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
             <span>Supports</span>
           </li>
-          {/* <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded ">
-            <FcSupport className="bg-gray-200  rounded-full" />
-            <span onClick={handleClick}>Edit Profile</span>
-          </li> */}
+          <div className="mt-6 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={isPublic}
+                    onClick={handleToggleVisibility}
+                    disabled={updatingVisibility}
+                    className="sr-only peer"
+                  />
+
+                  <div className="w-10 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {isPublic ? (
+                    <>
+                      <GlobeAltIcon className="w-5 h-5 text-violet-600" />
+                      <span className="font-medium text-gray-800 group-hover:text-violet-700 transition-colors">
+                        Your profile is public
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <LockClosedIcon className="w-5 h-5 text-gray-500" />
+                      <span className="font-medium text-sm text-gray-800 group-hover:text-violet-700 transition-colors">
+                        Make profile public
+                      </span>
+                    </>
+                  )}
+                </div>
+                {updatingVisibility && (
+                  <svg
+                    className="animate-spin ml-2 h-4 w-4 text-violet-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
+              </label>
+
+              {isPublic && (
+                <button
+                  onClick={handleShare}
+                  className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white text-sm font-medium rounded-lg hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm hover:shadow-md active:scale-95"
+                >
+                  <ShareIcon className="w-4 h-4" />
+                  🔗 Share Profile
+                </button>
+              )}
+            </div>
+
+            {isPublic && (
+              <p className="mt-3 text-sm text-gray-600 flex items-start gap-1.5">
+                <InformationCircleIcon className="w-4 h-4 mt-0.5 text-violet-500 flex-shrink-0" />
+                Your profile is visible to everyone. You can share the copied
+                link .
+              </p>
+            )}
+          </div>
         </ul>
       </aside>
 
@@ -153,12 +302,17 @@ const Profile = () => {
             {/* <FaBell className="text-gray-600" /> */}
             <div className="flex items-center space-x-2">
               <img
-                src={backendUrl + profile?.profile_image || "/man.png"}
+                src={
+                  profile?.profile_image
+                    ? backendUrl + profile.profile_image
+                    : "/man.png"
+                }
                 alt="Profile"
                 className="h-10 w-10 rounded-full object-cover"
                 width={40}
                 height={40}
               />
+
               <span>
                 Hello <span className="font-semibold text-md">{username}</span>
               </span>
@@ -431,7 +585,7 @@ const Profile = () => {
                           {selectedCert.description}
                         </h3>
                         <button
-                        title="Close"
+                          title="Close"
                           onClick={() => setSelectedCert(null)}
                           className="p-1 rounded-full hover:bg-gray-100"
                         >
@@ -537,56 +691,157 @@ const Profile = () => {
             </button>
             <h2 className="text-lg font-semibold mb-4">Upload Certificate</h2>
 
-            <input
-              title="Select a file"
-              type="file"
-              accept=".jpg,.jpeg,.png,.pdf"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="mb-3"
-            />
+            <div className="space-y-4">
+              {/* Improved File Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Certificate File
+                </label>
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg
+                      className="w-8 h-8 mb-4 text-gray-500"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 16"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                      />
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      JPG, PNG, PDF (MAX. 10MB)
+                    </p>
+                    {file && (
+                      <p className="mt-2 text-sm text-gray-700">
+                        Selected: {file.name}
+                      </p>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                  />
+                </label>
+              </div>
 
-            <input
-              type="text"
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border rounded mb-4"
-            />
+              {/* Description Input */}
+              <div>
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Description
+                </label>
+                <input
+                  type="text"
+                  id="description"
+                  placeholder="Enter certificate description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                />
+              </div>
 
-            <button
-              className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700"
-              onClick={async () => {
-                if (!file || !description) {
-                  alert("Please select a file and enter a description.");
-                  return;
-                }
+              {/* Upload Button */}
+              <button
+                className="w-full bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                onClick={async () => {
+                  if (!file || !description) {
+                    toast.error(
+                      "Please select a file and enter a description."
+                    );
+                    return;
+                  }
 
-                const formData = new FormData();
-                formData.append("certificate_file", file);
-                formData.append("description", description);
-                formData.append("profile", profile?.unique_id!);
+                  const formData = new FormData();
+                  formData.append("certificate_file", file);
+                  formData.append("description", description);
+                  formData.append("profile", profile?.unique_id!);
 
-                try {
-                  await axiosInstance.post("/certificate/", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                  });
-                  toast.success("Certificate added successfully");
-                  setShowAddModal(false);
-                  setFile(null);
-                  setDescription("");
-                  // Optional: Refresh certificate list
-                  window.location.reload();
-                } catch (err) {
-                  console.error(err);
-                  toast.error("Failed to upload certificate");
-                }
-              }}
-            >
-              Upload
-            </button>
+                  try {
+                    await axiosInstance.post("/certificate/", formData, {
+                      headers: { "Content-Type": "multipart/form-data" },
+                    });
+                    toast.success("Certificate added successfully");
+                    setShowAddModal(false);
+                    setFile(null);
+                    setDescription("");
+                    // Optional: Refresh certificate list
+                    window.location.reload();
+                  } catch (err) {
+                    console.error(err);
+                    toast.error("Failed to upload certificate");
+                  }
+                }}
+                disabled={!file || !description}
+              >
+                Upload Certificate
+              </button>
+            </div>
           </div>
         </div>
       )}
+      <div>
+        {showShareModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative">
+              <button
+                className="absolute top-2 right-2 text-gray-600 hover:text-black"
+                onClick={() => setShowShareModal(false)}
+              >
+                &times;
+              </button>
+              <h2 className="text-lg font-semibold mb-4">Share your profile</h2>
+              <div className="flex justify-center gap-4">
+                <FacebookShareButton
+                  url={`${window.location.origin}/profile/public/${profile?.unique_id}`}
+                >
+                  <FacebookIcon size={40} round />
+                </FacebookShareButton>
+                <WhatsappShareButton
+                  url={`${window.location.origin}/profile/public/${profile?.unique_id}`}
+                  title="Check out my profile on ExEdu!"
+                >
+                  <WhatsappIcon size={40} round />
+                </WhatsappShareButton>
+                <TwitterShareButton
+                  url={`${window.location.origin}/profile/public/${profile?.unique_id}`}
+                  title="Check out my profile on ExEdu!"
+                >
+                  <FaXTwitter size={30} />
+                </TwitterShareButton>
+                <TelegramShareButton
+                  url={`${window.location.origin}/profile/public/${profile?.unique_id}`}
+                  title="Check out my profile on ExEdu!"
+                >
+                  <TelegramIcon size={40} round />
+                </TelegramShareButton>
+                <LinkedinShareButton
+                  url={`${window.location.origin}/profile/public/${profile?.unique_id}`}
+                  title="Check out my profile on ExEdu!"
+                >
+                  <LinkedinIcon size={40} round />
+                </LinkedinShareButton>
+              </div>
+              <p className="text-sm text-gray-500 mt-4">
+                Link copied to clipboard
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

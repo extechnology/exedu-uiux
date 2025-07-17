@@ -12,6 +12,8 @@ const AboutMain = () => {
     (img: SectionImage) => img.section === "about_us"
   );
 
+
+  console.log(aboutImage,aboutImage);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const style: React.CSSProperties = {

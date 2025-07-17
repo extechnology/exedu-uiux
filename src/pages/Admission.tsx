@@ -99,14 +99,14 @@ export default function Admission() {
       <div className="max-w-6xl mx-auto px-4 md:px-0 text-white border border-gray-300 rounded-xl flex flex-col-reverse  space-y-5 md:space-y-0 md:flex-row">
         {/* Left Side - Contact Form */}
         <div
-          className="w-full md:w-1/2 bg-gray-100 text-gray-700 p-10 mt-5 md:mt-0 rounded-xl md:rounded-l-xl md:rounded-r-none flex flex-col justify-center"
+          className="w-full md:w-1/2 bg-gray-100 text-gray-700 md:p-10 p-4 mt-5 md:mt-0 rounded-xl md:rounded-l-xl md:rounded-r-none flex flex-col justify-center"
           data-aos="fade-up"
           data-aos-duration="1000"
         >
           <div className="absolute bottom-80 left-40 w-28 h-28 bg-purple-500 blur-3xl rounded-full opacity-20 z-10" />
 
           <h2
-            className="md:text-4xl text-3xl font-bold tracking-wider mb-8"
+            className="md:text-4xl text-3xl font-bold text-center md:text-start tracking-wider mb-8"
             data-aos="fade-up"
             data-aos-duration="1100"
           >
@@ -211,7 +211,7 @@ export default function Admission() {
           <img
             src={BACKEND_URL + LeadingSolution?.image}
             alt="Robot"
-            className="max-w-full object-contain md:rounded-r-xl md:rounded-l-none rounded-xl"
+            className="max-w-full object-contain mt-5 md:rounded-r-xl md:rounded-l-none rounded-xl"
             data-aos="fade-up"
             data-aos-duration="1000"
           />

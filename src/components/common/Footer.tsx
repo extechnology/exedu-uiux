@@ -1,4 +1,3 @@
-"use client";
 import {
   FaInstagram,
   FaFacebook,
@@ -14,7 +13,7 @@ import { Link } from "react-router-dom";
 const Footer: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   return (
-    <div className="bg-gradient-to-r  from-slate-800 to-slate-900 text-white pt-10 pb-5 shadow-t-2xl">
+    <div className="bg-gradient-to-r relative z-[40] from-slate-800 to-slate-900 text-white pt-10 pb-5 shadow-t-2xl">
       <div className="grid grid-cols-1 md:grid-cols-4 max-w-7xl mx-auto px-5 space-y-8 md:space-y-0">
         <div>
           <h1 className="font-medium text-xl">Quick Links</h1>

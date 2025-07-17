@@ -76,10 +76,12 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="max-w-6xl mx-auto px-8 mt-28 grid grid-cols-1 md:grid-cols-2 mb-8  items-center text-gray-800 shadow-lg shadow-fuchsia-200">
+    <div className="max-w-6xl mx-auto md:px-8 px-5 mt-28 grid grid-cols-1 md:grid-cols-2 mb-8  items-center text-gray-800 shadow-lg shadow-fuchsia-200">
       {/* Left Section */}
       <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold pt-6">{detail?.title}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold pt-6">{detail?.title.split("_")
+                .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}</h1>
         <p className="text-base md:text-lg text-gray-600 leading-relaxed">
           Join our course and enhance your skills with{" "}
           <span className="text-purple-600 font-medium">expert guidance</span>.
@@ -92,7 +94,7 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
       </div>
 
       {/* Right Section - Form */}
-      <div className="bg-white shadow-md rounded-md p-8 w-full max-w-md mx-auto mb-10 md:mb-0">
+      <div className="bg-white shadow-md rounded-md md:p-8 p-4 w-full max-w-md mx-auto mb-10 md:mb-0">
         <form className="space-y-4" onSubmit={handleSubmit}>
           <label htmlFor="name">Name</label>
           <input

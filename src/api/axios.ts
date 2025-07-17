@@ -18,19 +18,25 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    const url = err.config?.url || "";
+    const isPublicUrl = url.includes("/public-profile/"); 
+
+    if (err.response?.status === 401 && !isPublicUrl) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("id");
       localStorage.removeItem("username");
       localStorage.removeItem("email");
-      console.log(err);
+
       alert("Session expired. Please login again.");
-      toast.error(err.response.data.detail);
+      toast.error(err.response.data?.detail || "Unauthorized");
       window.location.href = "/login";
     }
+
     return Promise.reject(err);
   }
 );
+
+
 
 export default axiosInstance;

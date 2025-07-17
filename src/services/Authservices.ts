@@ -3,8 +3,7 @@ import type {
   RegisterRequest,
   RegisterResponse,
   LoginRequest,
-  // LoginResponse,
-  // verifyOtpRequest
+  AuthResponse,
 } from "../api/types";
 
 export const registerUser = async (
@@ -55,4 +54,13 @@ export const verifyOtp = async ({
 export const resendOtp = async (email: string) => {
   const res = await axiosInstance.post("/resend-otp/", { email });
   return res.data;
+};
+
+
+
+export const loginWithGoogle = async (token: string): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>("google-auth/", {
+    token,
+  });
+  return response.data;
 };

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/Authservices";
 import toast from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
+import type { CredentialResponse } from "@react-oauth/google";
+import { loginWithGoogle } from "../../services/Authservices";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -152,10 +154,34 @@ const Register: React.FC = () => {
         <div className="text-center text-gray-500 text-sm">Or</div>
 
         {/* Google Sign Up */}
-        <button className="w-full cursor-pointer flex items-center justify-center gap-2 py-2 border-2 border-pink-300 rounded-md hover:bg-gray-50">
-          <FcGoogle size={20} />
-          <span className="text-gray-700">Sign up with Google</span>
-        </button>
+        <div className="w-full flex justify-center">
+          <GoogleLogin
+            onSuccess={async (credentialResponse: CredentialResponse) => {
+              const token = credentialResponse?.credential;
+
+              if (!token) {
+                toast.error("Google credential is missing.");
+                return;
+              }
+
+              try {
+                const response = await loginWithGoogle(token);
+
+                localStorage.setItem("accessToken", response.access);
+                localStorage.setItem("refreshToken", response.refresh);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("email", response.email);
+                localStorage.setItem("id", `${response.user_id}`);
+
+                toast.success("Logged in with Google!");
+                navigate("/");
+              } catch (err: any) {
+                toast.error("Google login failed.");
+                console.error(err);
+              }
+            }}
+          />
+        </div>
 
         {/* Login Prompt */}
         <p className="text-center text-sm text-gray-700">

@@ -62,7 +62,10 @@ const AdvancedCourse = () => {
                 >
                   {course.sub_title}
                 </p>
-                <Link to={"/course"}>
+                <Link
+                  to={`/single/${course.id}`}
+                  state={{ course: course.title }}
+                >
                   <button
                     type="button"
                     className="relative group cursor-pointer overflow-hidden text-sm md:text-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white font-bold px-8 py-3 rounded-lg"

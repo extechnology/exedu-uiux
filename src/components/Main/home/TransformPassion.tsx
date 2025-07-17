@@ -16,12 +16,12 @@ const TransformPassion = () => {
   if (error) return <div>Error: {error.message}</div>;
   if (!TransformPassion) return <div>No image found for this section.</div>;
   return (
-    <div className="bg-[url('/course-bg.png')] bg-cover bg-center ">
+    <div className="bg-[url('/course-bg.png')] bg-cover bg-center">
       <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-2 md:pt-10 px-5 xl:px-0">
         <div className=" md:flex xl:block gap-10 justify-center md:py-4 xl:py-0">
           <div className="flex gap-5">
             <div
-              className="xl:w-1/3 h-[20px] bg-fuchsia-500 transform xl:translate-y-37 "
+              className="xl:w-1/3 h-[20px] bg-fuchsia-500 transform xl:translate-y-37"
               data-aos="zoom-in"
               data-aos-duration="1000"
             ></div>
@@ -29,7 +29,7 @@ const TransformPassion = () => {
               <img
                 src={BACKEND_URL + TransformPassion?.image}
                 alt="no image"
-                className="xl:w-[75%] rounded-lg hidden md:block "
+                className="xl:w-[75%] rounded-lg hidden md:block"
                 data-aos="zoom-in"
                 data-aos-duration="900"
               />
@@ -68,7 +68,7 @@ const TransformPassion = () => {
             </span>
           </h1>
           <p
-            className="text-sm md:text-xl pl-4 py-5 md:pt-0 relative text-justify before:absolute before:left-4 xl:before:top-2 before:h-[80%] before:w-1 before:bg-fuchsia-500 before:content-[''] before:-translate-x-4 before:rounded"
+            className="text-sm md:text-lg pl-4 py-5 md:pt-0 relative text-justify before:absolute before:left-4 xl:before:top-1 before:h-[80%] before:w-1 before:bg-fuchsia-500 before:content-[''] before:-translate-x-4 before:rounded"
             data-aos="zoom-in"
             data-aos-duration="1100"
           >
@@ -78,7 +78,7 @@ const TransformPassion = () => {
             tomorrow with Hybrid AI Education!{" "}
           </p>
           <p
-            className="text-sm md:text-xl text-justify"
+            className="text-sm md:text-lg text-justify"
             data-aos="zoom-in"
             data-aos-duration="1200"
           >
@@ -95,7 +95,7 @@ const TransformPassion = () => {
         data-aos="zoom-in"
         data-aos-duration="1300"
       >
-        <p className="text-sm md:text-xl pl-4 py-5 md:pt-0 relative text-justify before:absolute before:left-4 xl:before:top-2 before:h-[80%] before:w-1 before:bg-fuchsia-500 before:content-[''] before:-translate-x-4 before:rounded">
+        <p className="text-sm md:text-lg pl-4 pb-5 md:pt-0 relative text-justify before:absolute before:left-4 before:h-[80%] before:w-1 before:bg-fuchsia-500 before:content-[''] before:-translate-x-4 before:rounded">
           With AI Driven tools and hands-on training, the institute bridges
           theory and practice, delivering a dynamic, industry-aligned education,
           whether mastering design, AI in marketing or robotics , exedu provides

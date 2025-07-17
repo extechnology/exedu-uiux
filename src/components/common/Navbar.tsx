@@ -4,20 +4,49 @@ import { User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSolidFoodMenu } from "react-icons/bi";
+import { useLocation } from "react-router-dom";
+import axiosInstance from "../../api/axios";
 
 const Navbar = () => {
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false); // Controls mobile dropdown
+  const [showProfileMenu, setShowProfileMenu] = useState(false); // Controls profile dropdown
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Auth status state
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const token = localStorage.getItem("accessToken");
-  const id = localStorage.getItem("id");
-  console.log(id, "id");
-
-  const isLoggedIn = token !== null;
+  const isPublicPage = location.pathname.startsWith("/profile/public/"); // ✅ Detect if current route is a public profile
 
   const mobileMenuRef = useRef<HTMLUListElement | null>(null);
 
+  const id = localStorage.getItem("id");
+
+  // 🔒 Validate token only on non-public pages to determine true login state
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!isPublicPage) {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          try {
+            await axiosInstance.get("/auth/validate-token/");
+            setIsLoggedIn(true);
+          } catch {
+            // Token is invalid or expired
+            localStorage.clear();
+            setIsLoggedIn(false);
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
+      } else {
+        // For public page, never consider user as logged in
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkAuth();
+  }, [location]);
+
+  // 👆 Handle outside click to close mobile menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -30,8 +59,6 @@ const Navbar = () => {
 
     if (showMobileMenu) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
@@ -39,16 +66,14 @@ const Navbar = () => {
     };
   }, [showMobileMenu]);
 
+  // 📱 Close mobile menu on screen resize
+  useEffect(() => {
+    const close = () => setShowMobileMenu(false);
+    window.addEventListener("resize", close);
+    return () => window.removeEventListener("resize", close);
+  }, []);
 
-  const handleProfileClick = () => {
-    setShowMobileMenu(false);
-    if (isLoggedIn && id) {
-      navigate(`/profile/${id}`);
-    } else {
-      navigate("/no-account");
-    }
-  };
-
+  // 🔓 Handle logout: clear all auth data
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -58,11 +83,29 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    const close = () => setShowMobileMenu(false);
-    window.addEventListener("resize", close);
-    return () => window.removeEventListener("resize", close);
-  }, []);
+  const handleProfileClick = async () => {
+    setShowMobileMenu(false);
+
+    if (!isLoggedIn || !id) {
+      navigate("/no-account");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.get(`/profile/user/${id}/`);
+      const profile = response.data;
+
+      if (profile.can_access_profile) {
+        navigate(`/profile/${id}`);
+      } else {
+        navigate("/no-account"); 
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      navigate("/not-found");
+    }
+  };
+
 
   const navLinks = [
     { label: "Home", to: "/" },
@@ -71,6 +114,7 @@ const Navbar = () => {
     { label: "Admission", to: "/admission" },
   ];
 
+  // 💫 Animation settings
   const dropIn = {
     hidden: { opacity: 0, y: -20 },
     visible: (i: number) => ({

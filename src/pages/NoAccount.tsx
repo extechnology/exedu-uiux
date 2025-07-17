@@ -1,17 +1,34 @@
 import { SlUser } from "react-icons/sl";
-import { FaGraduationCap } from "react-icons/fa6";
 import { IoMdCopy } from "react-icons/io";
 import { LiaCertificateSolid } from "react-icons/lia";
-// import ProfileModal from "./ProfileForm";
+import { PiGraduationCapDuotone } from "react-icons/pi";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axiosInstance from "../api/axios";
 
 const NoAccount = () => {
-  const [showModal, setShowModal] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(showModal)
+
+  const [canAccess, setCanAccess] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const isLoggedIn = localStorage.getItem("accessToken") !== null;
+
+  const handleRequestAccess = async () => {
+    setLoading(true);
+    try {
+      await axiosInstance.post("/request-profile-access/");
+      setRequestMessage("Access request sent! We’ll notify you through email once approved.");
+    } catch (error) {
+      setRequestMessage("Failed to send request. Try again later.");
+    }
+    setLoading(false);
+  };
+
+
   const handleProfileClick = () => {
     if (!token) {
       navigate("/login", {
@@ -19,7 +36,6 @@ const NoAccount = () => {
       });
       return;
     }
-    setShowModal(true);
   };
 
   const token = localStorage.getItem("accessToken");
@@ -49,7 +65,7 @@ const NoAccount = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5 md:px-0">
         <div className="p-8 border-2 border-fuchsia-400 rounded-2xl shadow-lg shadow-fuchsia-300 space-y-4 hover:shadow-md hover:shadow-fuchsia-500 duration-300 transition-all hover:scale-105">
-          <FaGraduationCap className="w-10 h-10  text-fuchsia-700 hover:-translate-x-2 duration-300 transition-all  " />
+          <PiGraduationCapDuotone className="w-10 h-10  text-fuchsia-700 hover:-translate-x-2 duration-300 transition-all  " />
           <h1 className="text-2xl font-bold hover:-translate-y-1 duration-300 transition-all">
             Track Courses
           </h1>
@@ -80,12 +96,27 @@ const NoAccount = () => {
         </div>
       </div>
       <div className="flex justify-center pt-12">
-        <button
-          onClick={handleProfileClick}
-          className="w-80 py-3 bg-gradient-to-r font-bold from-fuchsia-500 to-violet-600 text-white rounded-full hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-500 transition-all duration-300"
-        >
-          Create your Account
-        </button>
+        {!isLoggedIn ? (
+          <button
+            onClick={handleProfileClick}
+            className="w-80 py-3 bg-gradient-to-r font-bold from-fuchsia-500 to-violet-600 text-white rounded-full hover:from-violet-600 hover:to-fuchsia-500 transition-all duration-300"
+          >
+            Create your Account
+          </button>
+        ) : !canAccess ? (
+          <div className="flex flex-col items-center space-y-4">
+            <button
+              onClick={handleRequestAccess}
+              disabled={loading}
+              className="w-80 py-3 bg-gradient-to-r font-bold from-fuchsia-500 to-violet-600 text-white rounded-full hover:from-emerald-600 hover:to-green-500 transition-all duration-300 disabled:opacity-50"
+            >
+              {loading ? "Requesting..." : "Request Access"}
+            </button>
+            {requestMessage && (
+              <p className="text-center text-green-600">{requestMessage}</p>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

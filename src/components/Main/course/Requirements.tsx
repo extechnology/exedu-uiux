@@ -14,7 +14,7 @@ const Requirements: React.FC<CourseProps> = ({ course }) => {
   return (
     <div className="max-w-6xl mx-auto md:pb-5">
       <h1 className="text-2xl md:text-4xl font-bold text-center pt-4 px-4 md:px-0">
-        Breakthrough for Graphic Designers
+        Breakthrough for Course
       </h1>
       <div className="w-30 h-[3px] rounded-full mt-3 bg-fuchsia-600 mx-auto"></div>
       <div className="md:flex justify-center pt-10 gap-10">

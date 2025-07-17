@@ -10,7 +10,11 @@ const Hero = () => {
     (img: SectionImage) => img.section === "hero"
   );
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  console.log(heroImage,"heroImage");
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, ""); 
+  const imagePath = heroImage?.image?.replace(/^\/+/, "");
+  console.log(imagePath,"imagePath");
 
   
 
@@ -22,7 +26,11 @@ const Hero = () => {
   return (
     <div>
       <div className="hidden md:block">
-        <img src={BACKEND_URL + heroImage?.image} alt="" className="xl:h-auto h-screen w-full" />
+        <img
+          src={`${BACKEND_URL}/${imagePath}`}
+          alt=""
+          className="xl:h-auto h-screen w-full"
+        />
         {/* <div className="absolute hero top-[30%] md:left-[15%] xl:left-[15%] pl-4 md:pl-0  text-white">
           <h1
             className="xl:text-7xl md:text-4xl text-3xl font-bold "
