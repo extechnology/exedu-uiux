@@ -11,7 +11,7 @@ const NoAccount = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [canAccess, setCanAccess] = useState(false);
+  const [canAccess] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
   const [loading, setLoading] = useState(false);
 

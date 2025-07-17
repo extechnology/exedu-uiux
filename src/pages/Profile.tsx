@@ -18,7 +18,6 @@ import toast from "react-hot-toast";
 import { FiFileText } from "react-icons/fi";
 import { FiX } from "react-icons/fi";
 import { FiAward } from "react-icons/fi";
-import axios from "axios";
 import {
   FacebookShareButton,
   WhatsappShareButton,
