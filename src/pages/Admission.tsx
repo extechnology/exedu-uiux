@@ -18,11 +18,12 @@ export default function Admission() {
   });
 
   const courseOptions = [
-    "Full Stack Development",
-    "Data Science",
-    "Cybersecurity",
+    "AI Hybrid Digital Marketing",
+    "Graphic Design",
+    "Web/App Development",
     "UI/UX Design",
-    "Digital Marketing",
+    "Video Editing",
+    "Robotics"
   ];
 
   const [submitting, setSubmitting] = useState(false);

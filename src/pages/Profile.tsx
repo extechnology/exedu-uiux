@@ -5,6 +5,7 @@ import { FaMobile, FaPaypal, FaEdit } from "react-icons/fa";
 import Skills from "../components/profile/SkillsSection";
 import { useState, useEffect } from "react";
 import type { Profile, StudentCertificates } from "../api/types";
+import { Link } from "react-router-dom";
 import { PersonStanding } from "lucide-react";
 import { LucidePaperclip } from "lucide-react";
 import useProfile from "../hooks/useProfile";
@@ -94,7 +95,7 @@ const Profile = () => {
     const newStatus = !isPublic;
 
     setUpdatingVisibility(true);
-    setIsPublic(newStatus); 
+    setIsPublic(newStatus);
 
     try {
       const res = await axiosPublic.put(`/public-profile/${uniqueId}/`, {
@@ -194,22 +195,31 @@ const Profile = () => {
               My dashboard
             </span>
           </li>
-          <li className="flex items-center space-x-2 text-gray-500 bg-white p-2 rounded">
+          <li className="flex items-center space-x-2 bg-white p-2 rounded">
             <FaMobile className="bg-gray-200  rounded-full" />
             <span>Mobile</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+          <li className="flex items-center space-x-2 bg-white p-2 rounded">
             <FaPaypal className="bg-gray-200  rounded-full" />
             <span>Payments</span>
           </li>
-          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
-            <LucidePaperclip className="w-4 h-4 bg-gray-200  rounded-full" />
-            <span>Complaints</span>
+          <li className="flex items-center space-x-2 bg-white p-2 rounded">
+            <a
+              href="https://wa.me/919072123466"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 bg-white rounded"
+            >
+              <LucidePaperclip className="w-4 h-4 bg-gray-200  rounded-full" />
+              <span>Complaints</span>
+            </a>
           </li>
-          <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
-            <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
-            <span>Supports</span>
-          </li>
+          <Link to="/admission">
+            <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+              <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
+              <span>Supports</span>
+            </li>
+          </Link>
           <div className="mt-6 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <label className="flex items-center gap-3 cursor-pointer group">

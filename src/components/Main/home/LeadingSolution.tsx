@@ -1,6 +1,6 @@
 import { useSectionImages } from "../../../hooks/useSectionImages";
 import type { SectionImage } from "../../../api/types";
-import { Loader } from "lucide-react";
+import Loader from "../../common/Loader";
 
 const LeadingSolution = () => {
   const { sectionImages, loading, error } = useSectionImages();

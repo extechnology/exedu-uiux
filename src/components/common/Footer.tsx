@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
             <li>Ramanattukara, Kozhikode</li>
             <li>Kerala 673633 </li>
             <li>Ph: +91 9072123466</li>
-            <li>Email : exeduone@gmail.in</li>
+            <li>Email : exeduone@gmail.com</li>
           </ul>
         </div>
         <div>

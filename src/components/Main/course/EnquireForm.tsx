@@ -87,8 +87,8 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
           <span className="text-purple-600 font-medium">expert guidance</span>.
         </p>
         <img
-          src="/form.png"
-          alt="Graphic Designer"
+          src="/EnquireForm.jpg"
+          alt="enquireForm"
           className="w-full md:w-3/5 mx-auto"
         />
       </div>
