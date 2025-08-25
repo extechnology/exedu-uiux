@@ -24,6 +24,7 @@ const Login: React.FC = () => {
       localStorage.setItem("id", response.user_id);
 
       console.log("Login successful:", response);
+      toast.success("Login successful!");
       navigate("/");
     } catch (error: any) {
       console.error("Login failed:", error);
@@ -73,11 +74,11 @@ const Login: React.FC = () => {
               placeholder="At least 8 characters"
               className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
-            {/* <div className="text-right mt-1">
-              <a href="#" className="text-sm text-blue-600 hover:underline">
+            <div className="text-right mt-1">
+              <Link to="/reset" className="text-sm text-blue-600 hover:underline">
                 Forgot Password?
-              </a>
-            </div> */}
+              </Link>
+            </div>
           </div>
 
           {/* Sign In Button */}

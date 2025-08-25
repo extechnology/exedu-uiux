@@ -23,18 +23,19 @@ const Register: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.password !== formData.password_confirm) {
       setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     try {
       const res = await registerUser(formData);
       console.log("response:", res);
+      toast.success("OTP sent successfully! Please verify.");
       navigate("/verify-otp", {
         state: {
           email: formData.email,
@@ -58,10 +59,10 @@ const Register: React.FC = () => {
         setError(data.non_field_errors[0]);
       } else {
         setError("Registration failed. Please try again.");
+        toast.error("Registration failed. Please try again.");
       }
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white pt-28 pb-10 px-4">

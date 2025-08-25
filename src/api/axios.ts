@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(
       localStorage.removeItem("username");
       localStorage.removeItem("email");
 
-      alert("Session expired. Please login again.");
+      // alert("Session expired. Please login again.");
       toast.error(err.response.data?.detail || "Unauthorized");
       window.location.href = "/login";
     }

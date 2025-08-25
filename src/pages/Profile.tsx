@@ -1,7 +1,7 @@
 import { FaUser } from "react-icons/fa";
 import AttendanceTracker from "../components/profile/AttendanceTracker";
 import ProgressSection from "../components/profile/ProgressSection";
-import { FaMobile, FaPaypal, FaEdit } from "react-icons/fa";
+import { FaPaypal, FaEdit } from "react-icons/fa";
 import Skills from "../components/profile/SkillsSection";
 import { useState, useEffect } from "react";
 import type { Profile, StudentCertificates } from "../api/types";
@@ -16,9 +16,10 @@ import ImageEditModal from "./EditImage";
 import useCertificate from "../hooks/useCertificate";
 import { IoIosAddCircle } from "react-icons/io";
 import toast from "react-hot-toast";
-import { FiFileText } from "react-icons/fi";
-import { FiX } from "react-icons/fi";
+import { FiFileText, FiLogOut, FiX, FiMenu } from "react-icons/fi";
 import { FiAward } from "react-icons/fi";
+import { MdOutlinePassword } from "react-icons/md";
+
 import {
   FacebookShareButton,
   WhatsappShareButton,
@@ -38,12 +39,15 @@ import {
 } from "@heroicons/react/24/outline";
 import { FaXTwitter } from "react-icons/fa6";
 import axiosPublic from "../api/axiosPublic";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
     null
   );
   const certificate = useCertificate();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const navigate = useNavigate();
   const [editingSection, setEditingSection] = useState<
     "phone" | "education" | "career" | null
   >(null);
@@ -127,6 +131,15 @@ const Profile = () => {
   //   setShowShareModal(true);
   // };
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("id");
+    navigate("/login");
+  };
+
   const handleShare = () => {
     const metaPreviewUrl = `${window.location.origin}/profile/public/${profile?.unique_id}`;
     navigator.clipboard.writeText(metaPreviewUrl);
@@ -184,11 +197,12 @@ const Profile = () => {
   return (
     <div className="flex bg-gray-100 pt-18 overflow-x-hidden">
       {/* Sidebar */}
+
       <aside className="w-64 hidden md:block fixed top-0 left-0 h-screen mt-17 bg-gray-200 shadow-md p-5 overflow-y-auto z-30">
         {/* <div className="flex items-center space-x-2">
           <img src="/ex_edu_logo-03.png" alt="" className="p-2" />
         </div> */}
-        <ul className="mt-8 space-y-4 cursor-pointer">
+        <ul className="mt-2 space-y-4 cursor-pointer">
           <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
             <FaUser />
             <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
@@ -196,11 +210,7 @@ const Profile = () => {
             </span>
           </li>
           <li className="flex items-center space-x-2 bg-white p-2 rounded">
-            <FaMobile className="bg-gray-200  rounded-full" />
-            <span>Mobile</span>
-          </li>
-          <li className="flex items-center space-x-2 bg-white p-2 rounded">
-            <FaPaypal className="bg-gray-200  rounded-full" />
+            <FaPaypal className="bg-white  rounded-full" />
             <span>Payments</span>
           </li>
           <li className="flex items-center space-x-2 bg-white p-2 rounded">
@@ -210,13 +220,13 @@ const Profile = () => {
               rel="noopener noreferrer"
               className="flex items-center space-x-2 bg-white rounded"
             >
-              <LucidePaperclip className="w-4 h-4 bg-gray-200  rounded-full" />
+              <LucidePaperclip className="w-4 h-4 bg-white  rounded-full" />
               <span>Complaints</span>
             </a>
           </li>
           <Link to="/admission">
             <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
-              <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
+              <PersonStanding className="w-5 h-5 bg-white  rounded-full" />
               <span>Supports</span>
             </li>
           </Link>
@@ -294,21 +304,192 @@ const Profile = () => {
               </p>
             )}
           </div>
+          <Link to="/reset" className="mb-2">
+            <li className="flex items-center space-x-2 bg-white p-2 rounded">
+              <MdOutlinePassword className="bg-white  rounded-full" />
+              <span>Change Password</span>
+            </li>
+          </Link>
+          <li
+            onClick={handleLogout}
+            className="flex items-center space-x-2 mt-4 bg-red-200 p-2 rounded"
+          >
+            <FiLogOut className="bg-red-200 text-red-600 rounded-full" />
+            <span className="text-red-600 font-medium">Log Out</span>
+          </li>
         </ul>
       </aside>
 
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+
+          {/* Sidebar content */}
+          <div className="relative w-64 bg-gray-200 shadow-md p-5 h-full z-50">
+            {/* Close button */}
+            <button
+              title="Close sidebar"
+              onClick={() => setMobileSidebarOpen(false)}
+              className="absolute top-4 right-4"
+            >
+              <FiX className="w-6 h-6 text-gray-700" />
+            </button>
+
+            <ul className="mt-10 space-y-4 cursor-pointer">
+              {/* copy your sidebar <li> items here */}
+              <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
+                <FaUser />
+                <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                  My dashboard
+                </span>
+              </li>
+              <div>
+                <ul className="space-y-2">
+                  <li className="flex items-center space-x-2 bg-white p-2 rounded">
+                    <FaPaypal className="bg-white  rounded-full" />
+                    <span>Payments</span>
+                  </li>
+                  <li className="flex items-center space-x-2 bg-white p-2 rounded">
+                    <a
+                      href="https://wa.me/919072123466"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 bg-white rounded"
+                    >
+                      <LucidePaperclip className="w-4 h-4 bg-white  rounded-full" />
+                      <span>Complaints</span>
+                    </a>
+                  </li>
+                  <Link to="/admission">
+                    <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
+                      <PersonStanding className="w-5 h-5 bg-white  rounded-full" />
+                      <span>Supports</span>
+                    </li>
+                  </Link>
+                </ul>
+                <div className="mt-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={isPublic}
+                          onClick={handleToggleVisibility}
+                          disabled={updatingVisibility}
+                          className="sr-only peer"
+                        />
+
+                        <div className="w-10 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isPublic ? (
+                          <>
+                            <GlobeAltIcon className="w-5 h-5 text-violet-600" />
+                            <span className="font-medium text-gray-800 group-hover:text-violet-700 transition-colors">
+                              Your profile is public
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <LockClosedIcon className="w-5 h-5 text-gray-500" />
+                            <span className="font-medium text-sm text-gray-800 group-hover:text-violet-700 transition-colors">
+                              Make profile public
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      {updatingVisibility && (
+                        <svg
+                          className="animate-spin ml-2 h-4 w-4 text-violet-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      )}
+                    </label>
+
+                    {isPublic && (
+                      <button
+                        onClick={handleShare}
+                        className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white text-sm font-medium rounded-lg hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm hover:shadow-md active:scale-95"
+                      >
+                        <ShareIcon className="w-4 h-4" />
+                        🔗 Share Profile
+                      </button>
+                    )}
+                  </div>
+
+                  {isPublic && (
+                    <p className="mt-3 text-sm text-gray-600 flex items-start gap-1.5">
+                      <InformationCircleIcon className="w-4 h-4 mt-0.5 text-violet-500 flex-shrink-0" />
+                      Your profile is visible to everyone. You can share the
+                      copied link .
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Link to="/reset">
+                <li className="flex items-center space-x-2 bg-white p-2 rounded">
+                  <MdOutlinePassword />
+                  <span>Change Password</span>
+                </li>
+              </Link>
+              <li
+                onClick={handleLogout}
+                className="flex items-center space-x-2 mt-2 bg-red-200 p-2 rounded"
+              >
+                <FiLogOut className="text-red-600" />
+                <span className="text-red-600 font-medium">Log Out</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
       <main className="md:ml-64 flex-1 p-0 pt-5 md:p-8 bg-white max-w-full overflow-hidden">
-        <div className="flex md:justify-between justify-end items-center px-5">
-          <h2 className="md:text-2xl hidden md:block text-gray-700 font-semibold">
-            Welcome to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
-              exedu
-            </span>{" "}
-            student portal
-          </h2>
+        <div className="flex justify-between items-center px-5">
+          {/* Left section: Welcome (hidden on mobile) + Menu button (mobile only) */}
+          <div className="flex items-center space-x-3">
+            {/* Mobile Menu Button */}
+            <button
+              title="Open sidebar"
+              onClick={() => setMobileSidebarOpen(true)}
+              className="p-2 rounded-md bg-white shadow-md md:hidden"
+            >
+              <FiMenu className="w-6 h-6 text-gray-700" />
+            </button>
+
+            {/* Welcome text (hidden on mobile) */}
+            <h2 className="text-2xl hidden md:block text-gray-700 font-semibold">
+              Welcome to{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                exedu
+              </span>{" "}
+              student portal
+            </h2>
+          </div>
+
+          {/* Right section: Profile */}
           <div className="flex items-center space-x-4 md:pr-4">
-            {/* <FaBell className="text-gray-600" /> */}
             <div className="flex items-center space-x-2">
               <img
                 src={
@@ -321,7 +502,6 @@ const Profile = () => {
                 width={40}
                 height={40}
               />
-
               <span>
                 Hello <span className="font-semibold text-md">{username}</span>
               </span>

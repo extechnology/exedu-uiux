@@ -16,6 +16,7 @@ const NoAccount = () => {
   const [loading, setLoading] = useState(false);
 
   const isLoggedIn = localStorage.getItem("accessToken") !== null;
+  const email = localStorage.getItem("email");
 
   const handleRequestAccess = async () => {
     setLoading(true);
@@ -58,6 +59,7 @@ const NoAccount = () => {
         <h1 className="text-center text-xl md:text-2xl font-bold pt-4">
           Your Profile is Empty
         </h1>
+        <h1 className="text-center text-lg md:text-xl bg-gradient-to-r from-fuchsia-500 to-violet-500 text-transparent bg-clip-text font-medium pt-4">Your are currently logged in as : <span className="font-semibold">{email}</span></h1>
         <p className="pt-6 text-center md:w-1/3 w-[92%] md:px-0 mx-auto">
           Create an Account to access your personalized dashboard with all your
           educational information in one place

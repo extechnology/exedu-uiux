@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyOtp } from "../../services/Authservices";
 import { resendOtp } from "../../services/Authservices";
+import toast from "react-hot-toast";
 
 const OTP_LENGTH = 6;
 
@@ -61,7 +62,9 @@ const VerifyOtp: React.FC = () => {
       });
 
       console.log("OTP verified:", res);
-      navigate("/"); 
+      toast.success("OTP verified successfully!");
+      toast.success("Registration successful! Please login.");
+      navigate("/login"); 
     } catch (error: any) {
       console.error("OTP verification failed", error);
       alert(
@@ -79,8 +82,10 @@ const VerifyOtp: React.FC = () => {
     try {
       await resendOtp(email);
       console.log("Resending OTP...");
+      toast.success("OTP resent successfully!");
     } catch (error: any) {
       console.error("Failed to resend OTP", error);
+      toast.error("Failed to resend OTP.");
     }
   };
   

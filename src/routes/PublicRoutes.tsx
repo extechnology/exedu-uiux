@@ -5,6 +5,8 @@ import MainLayout from "../components/layouts/MainLayout";
 import Login from "../components/Account/Login";
 import Register from "../components/Account/Register";
 import VerifyOtp from "../components/Account/VerifyOtp";
+import PasswordResetRequestPage from "../pages/PasswordResetRequest";
+import PasswordResetConfirmPage from "../pages/PasswordResetConfirm";
 
 const Home = lazy(() => import("../pages/Home"));
 const About = lazy(() => import("../pages/About"));
@@ -33,6 +35,11 @@ const PublicRoutes = () => (
       <Route path="/profile/public/:uniqueId" element={<PublicProfile />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/reset" element={<PasswordResetRequestPage />} />
+      <Route
+        path="/reset-password/:uidb64/:token"
+        element={<PasswordResetConfirmPage />}
+      />
     </Route>
   </>
 );

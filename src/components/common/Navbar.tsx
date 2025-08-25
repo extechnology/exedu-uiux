@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BiSolidFoodMenu } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../../api/axios";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false); // Controls mobile dropdown
@@ -102,6 +103,7 @@ const Navbar = () => {
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
+      toast.error("Error fetching profile.");
       navigate("/not-found");
     }
   };

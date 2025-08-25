@@ -3,21 +3,34 @@ import axiosInstance from "../../api/axios";
 
 const GoogleLoginButton = () => {
   const handleSuccess = async (credentialResponse: any) => {
-    const idToken = credentialResponse.credential;
+    console.log("Google credentialResponse:", credentialResponse);
+
+    const idToken = credentialResponse?.credential;
+    console.log("Extracted ID Token:", idToken);
+
+    if (!idToken) {
+      console.error("No ID token received from Google!");
+      return;
+    }
+
     try {
       const res = await axiosInstance.post("google-auth/", {
         token: idToken,
       });
-      console.log("Login successful", res.data);
-    } catch (error) {
-      console.error("Login failed", error);
+      console.log("Login successful:", res.data);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Login failed:", error.response.data);
+      } else {
+        console.error("Login failed:", error.message);
+      }
     }
   };
 
   return (
     <GoogleLogin
       onSuccess={handleSuccess}
-      onError={() => console.log("Login Failed")}
+      onError={() => console.error("Google Login Failed")}
     />
   );
 };
