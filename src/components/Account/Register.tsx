@@ -6,10 +6,15 @@ import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import type { CredentialResponse } from "@react-oauth/google";
 import { loginWithGoogle } from "../../services/Authservices";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   console.log(error);
 
   const [formData, setFormData] = useState({
@@ -31,7 +36,7 @@ const Register: React.FC = () => {
       toast.error("Passwords do not match");
       return;
     }
-
+    setLoading(true);
     try {
       const res = await registerUser(formData);
       console.log("response:", res);
@@ -61,6 +66,8 @@ const Register: React.FC = () => {
         setError("Registration failed. Please try again.");
         toast.error("Registration failed. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,7 +114,7 @@ const Register: React.FC = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              placeholder="Example@email.com"
+              placeholder="example@gmail.com"
               className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
           </div>
@@ -115,39 +122,61 @@ const Register: React.FC = () => {
           {/* Password */}
           <div>
             <label className="block text-sm mb-1 text-gray-700">Password</label>
-            <input
-              type="password"
-              name="password"
-              required
-              minLength={8}
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="At least 8 characters"
-              className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                required
+                minLength={8}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="At least 8 characters"
+                className="w-full px-4 py-2 pr-10 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
+          {/* Confirm Password */}
           <div>
             <label className="block text-sm mb-1 text-gray-700">
-              Confirm Your Password
+              Confirm Password
             </label>
-            <input
-              type="password"
-              name="password_confirm"
-              required
-              minLength={8}
-              value={formData.password_confirm}
-              onChange={handleChange}
-              placeholder="At least 8 characters"
-              className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="password_confirm"
+                required
+                minLength={8}
+                value={formData.password_confirm}
+                onChange={handleChange}
+                placeholder="At least 8 characters"
+                className="w-full px-4 py-2 pr-10 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
 
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full py-2 cursor-pointer rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
+            disabled={loading}
+            className={`w-full py-2 rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90 
+          ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
-            Sign up
+            {loading ? "Sending OTP..." : "Sign up"}
           </button>
         </form>
 

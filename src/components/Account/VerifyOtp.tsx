@@ -14,6 +14,7 @@ const VerifyOtp: React.FC = () => {
   const password = location.state?.password;
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
   const [resendTimer, setResendTimer] = useState(30);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -52,7 +53,7 @@ const VerifyOtp: React.FC = () => {
       alert("Missing registration details.");
       return;
     }
-
+    setLoading(true);
     try {
       const res = await verifyOtp({
         email,
@@ -71,6 +72,8 @@ const VerifyOtp: React.FC = () => {
         error.response?.data?.non_field_errors?.[0] ||
           "OTP verification failed."
       );
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -129,9 +132,11 @@ const VerifyOtp: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full py-2 rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
+            className={`w-full py-2 rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90 ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
-            Verify OTP
+            {loading ? "Verifying OTP..." : "Verify OTP"}
           </button>
         </form>
 

@@ -5,15 +5,18 @@ import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import type { CredentialResponse } from "@react-oauth/google";
 import { loginWithGoogle } from "../../services/Authservices";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await loginUser({ username, password });
 
@@ -29,6 +32,8 @@ const Login: React.FC = () => {
     } catch (error: any) {
       console.error("Login failed:", error);
       toast.error(error.response?.data?.detail || "Invalid email or password.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,30 +68,35 @@ const Login: React.FC = () => {
           </div>
 
           {/* Password */}
-          <div>
-            <label className="block text-sm mb-1 text-gray-700">Password</label>
+          <label className="block text-sm mb-1 text-gray-700">Password</label>
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 8 characters"
-              className="w-full px-4 py-2 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+              className="w-full px-4 py-2 pr-10 border-2 border-pink-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
-            <div className="text-right mt-1">
-              <Link to="/reset" className="text-sm text-blue-600 hover:underline">
-                Forgot Password?
-              </Link>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </button>
           </div>
 
           {/* Sign In Button */}
           <button
             type="submit"
-            className="w-full py-2 cursor-pointer rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90"
+            disabled={loading}
+            className={`w-full py-2 cursor-pointer rounded-md text-white font-medium bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:opacity-90 ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
-            Sign in
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
         {/* Divider */}
