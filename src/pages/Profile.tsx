@@ -57,7 +57,7 @@ const Profile = () => {
   const userId = localStorage.getItem("id");
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
-  const { profile, loading, error } = useProfile(userId!);
+  const { profile, loading, error } = useProfile();
   const [localProfile, setLocalProfile] = useState(profile);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [editingField, setEditingField] = useState<null | {
@@ -82,6 +82,7 @@ const Profile = () => {
   console.log(editingSection);
   console.log(openModal);
   console.log(certificate, "certificate");
+  console.log(profile, "profile");
 
   useEffect(() => {
     setLocalProfile(profile);
@@ -147,9 +148,6 @@ const Profile = () => {
     setShowShareModal(true);
   };
 
-  console.log(uniqueId, "uniqueId");
-  console.log(profile, "profile");
-  console.log(userId, "userId in profile");
 
   const openSectionEditor = (section: "phone" | "education" | "career") => {
     setEditingSection(section);
@@ -198,41 +196,147 @@ const Profile = () => {
     <div className="flex bg-gray-100 pt-18 overflow-x-hidden">
       {/* Sidebar */}
 
-      <aside className="w-64 hidden md:block fixed top-0 left-0 h-screen mt-17 bg-gray-200 shadow-md p-5 overflow-y-auto z-30">
-        {/* <div className="flex items-center space-x-2">
-          <img src="/ex_edu_logo-03.png" alt="" className="p-2" />
+      <aside className="w-72 hidden md:block fixed top-0 left-0 h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 backdrop-blur-sm shadow-2xl border-r border-white/20 overflow-y-auto z-30">
+        {/* Header Section */}
+        {/* <div className="p-6 border-b border-gray-100/50">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl flex items-center justify-center shadow-lg">
+              <FaUser className="text-white text-lg" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                My Dashboard
+              </h2>
+              <p className="text-sm text-gray-500">Welcome back!</p>
+            </div>
+          </div>
         </div> */}
-        <ul className="mt-2 space-y-4 cursor-pointer">
-          <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
-            <FaUser />
-            <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
-              My dashboard
-            </span>
-          </li>
-          <li className="flex items-center space-x-2 bg-white p-2 rounded">
-            <FaPaypal className="bg-white  rounded-full" />
-            <span>Payments</span>
-          </li>
-          <li className="flex items-center space-x-2 bg-white p-2 rounded">
+
+        {/* Navigation Menu */}
+        <nav className="p-6 space-y-3 mt-18">
+          {/* Payments */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+            <Link to={"/payments"}>
+              <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                  <FaPaypal className="text-white text-lg" />
+                </div>
+                <div>
+                  <span className="font-medium text-gray-800">Payments</span>
+                  <p className="text-xs text-gray-500">Manage billing</p>
+                </div>
+                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Complaints */}
+          <div className="group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
             <a
               href="https://wa.me/919072123466"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 bg-white rounded"
+              className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer "
             >
-              <LucidePaperclip className="w-4 h-4 bg-white  rounded-full" />
-              <span>Complaints</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+                <LucidePaperclip className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <span className="font-medium text-gray-800">Complaints</span>
+                <p className="text-xs text-gray-500">Get help via WhatsApp</p>
+              </div>
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </div>
             </a>
-          </li>
-          <Link to="/admission">
-            <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
-              <PersonStanding className="w-5 h-5 bg-white  rounded-full" />
-              <span>Supports</span>
-            </li>
+          </div>
+
+          {/* Support */}
+          <Link to="/admission" className="group relative block">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+            <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
+                <PersonStanding className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <span className="font-medium text-gray-800">Support</span>
+                <p className="text-xs text-gray-500">Get assistance</p>
+              </div>
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
           </Link>
-          <div className="mt-6 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <label className="flex items-center gap-3 cursor-pointer group">
+
+          {/* Profile Visibility Toggle */}
+          <div className="mt-2 p-5 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-md">
+            <h3 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+              Profile Settings
+            </h3>
+
+            <div className="space-y-4">
+              <label className="flex items-center justify-between cursor-pointer group">
+                <div className="flex items-center gap-3">
+                  {isPublic ? (
+                    <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-lg flex items-center justify-center">
+                      <GlobeAltIcon className="w-4 h-4 text-white" />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center">
+                      <LockClosedIcon className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                  <div>
+                    <span className="text-sm font-medium text-gray-800">
+                      {isPublic ? "Public Profile" : "Private Profile"}
+                    </span>
+                    <p className="text-xs text-gray-500">
+                      {isPublic ? "Visible to everyone" : "Only visible to you"}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="relative">
                   <input
                     type="checkbox"
@@ -241,83 +345,121 @@ const Profile = () => {
                     disabled={updatingVisibility}
                     className="sr-only peer"
                   />
-
-                  <div className="w-10 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {isPublic ? (
-                    <>
-                      <GlobeAltIcon className="w-5 h-5 text-violet-600" />
-                      <span className="font-medium text-gray-800 group-hover:text-violet-700 transition-colors">
-                        Your profile is public
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <LockClosedIcon className="w-5 h-5 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-800 group-hover:text-violet-700 transition-colors">
-                        Make profile public
-                      </span>
-                    </>
+                  <div className="w-12 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-purple-500 shadow-inner"></div>
+                  {updatingVisibility && (
+                    <div className="absolute -right-8 top-1">
+                      <svg
+                        className="animate-spin h-4 w-4 text-violet-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </div>
                   )}
                 </div>
-                {updatingVisibility && (
-                  <svg
-                    className="animate-spin ml-2 h-4 w-4 text-violet-600"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                )}
               </label>
 
               {isPublic && (
-                <button
-                  onClick={handleShare}
-                  className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white text-sm font-medium rounded-lg hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm hover:shadow-md active:scale-95"
-                >
-                  <ShareIcon className="w-4 h-4" />
-                  🔗 Share Profile
-                </button>
+                <div className="pt-3 border-t border-gray-100">
+                  <button
+                    onClick={handleShare}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 active:scale-95 group"
+                  >
+                    <ShareIcon className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                    <span>Share Profile</span>
+                    <div className="ml-1">🔗</div>
+                  </button>
+
+                  <div className="mt-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                    <div className="flex items-start gap-2">
+                      <InformationCircleIcon className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
+                      <p className="text-xs text-blue-700 leading-relaxed">
+                        Your profile is now public and can be shared with others
+                        using the link.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
-
-            {isPublic && (
-              <p className="mt-3 text-sm text-gray-600 flex items-start gap-1.5">
-                <InformationCircleIcon className="w-4 h-4 mt-0.5 text-violet-500 flex-shrink-0" />
-                Your profile is visible to everyone. You can share the copied
-                link .
-              </p>
-            )}
           </div>
-          <Link to="/reset" className="mb-2">
-            <li className="flex items-center space-x-2 bg-white p-2 rounded">
-              <MdOutlinePassword className="bg-white  rounded-full" />
-              <span>Change Password</span>
-            </li>
+
+          {/* Change Password */}
+          <Link to="/reset" className="group relative block mt-2">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+            <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
+                <MdOutlinePassword className="text-white text-lg" />
+              </div>
+              <div>
+                <span className="font-medium text-gray-800">
+                  Change Password
+                </span>
+                <p className="text-xs text-gray-500">Update security</p>
+              </div>
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
           </Link>
-          <li
-            onClick={handleLogout}
-            className="flex items-center space-x-2 mt-4 bg-red-200 p-2 rounded"
-          >
-            <FiLogOut className="bg-red-200 text-red-600 rounded-full" />
-            <span className="text-red-600 font-medium">Log Out</span>
-          </li>
-        </ul>
+        </nav>
+
+        {/* Logout Section */}
+        <div className=" bottom-6 left-6 right-6">
+          <div onClick={handleLogout} className="group relative cursor-pointer">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-rose-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+            <div className="relative flex items-center space-x-4 p-4 bg-red-50/80 backdrop-blur-sm rounded-xl border border-red-100/50 shadow-sm hover:shadow-lg hover:bg-red-50 transition-all duration-300">
+              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-rose-600 rounded-lg flex items-center justify-center shadow-md">
+                <FiLogOut className="text-white text-lg" />
+              </div>
+              <div>
+                <span className="font-medium text-red-700">Sign Out</span>
+                <p className="text-xs text-red-500">See you later!</p>
+              </div>
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg
+                  className="w-5 h-5 text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {mobileSidebarOpen && (
@@ -652,14 +794,14 @@ const Profile = () => {
                       </span>
                     </h3>
                     <p className="text-gray-600 pb-1">
-                      Joined Course: AI Hybrid Digital Marketing
+                      Joined Course: {profile?.course_name}
                     </p>
                     <p className="text-gray-900 font-bold pb-1"></p>
                     <p className="text-gray-600 pb-1">
-                      Course Duration: 3 Months
+                      Course Duration: {profile?.course_details?.duration}
                     </p>
                     <p className="text-gray-600">
-                      Class Start Date: 20/04/2025
+                      Class Start Date: {profile?.enrolled_at}
                     </p>
                   </div>
                   <div className="content-center pt-4 md:pt-0">
@@ -676,7 +818,11 @@ const Profile = () => {
 
             <div className="mt-6 md:flex gap-6 space-y-6 md:space-y-0 ">
               <div>
-                <AttendanceTracker />
+                <AttendanceTracker
+                  profileId={profile?.id || 0}
+                  courseId={profile?.course || 0}
+                  batchId={profile?.batch || 0}
+                />
               </div>
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
                 {/* Header */}

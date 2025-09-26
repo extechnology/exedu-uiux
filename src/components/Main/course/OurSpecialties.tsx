@@ -8,8 +8,8 @@ const OurSpecialties: React.FC<CourseProps> = ({ course }) => {
     ? singlePage.find((item) => item.title === course)
     : null;
   const specialties = detail?.specialties?.split("#") ?? [];
-  console.log(course, "courseName");
-  console.log(detail, "detail");
+  // console.log(course, "courseName");
+  // console.log(detail, "detail");
   return (
     <div className="px-4 md:px-0">
       <div className="max-w-2xl mx-auto  shadow-[0_6px_12px_#fbcfe8] md:py-20 py-10 my-12 rounded">

@@ -23,16 +23,18 @@ const App = () => {
   return (
     <Router>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        <Toaster position="top-center" reverseOrder={false} />
-        <ScrollToTop />
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            {PublicRoutes()}
-            {AdminRoutes()}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-        <WhatsAppButton />
+          <Toaster position="top-center" reverseOrder={false} />
+          <ScrollToTop />
+
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              {PublicRoutes()}
+              {AdminRoutes()}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+
+          <WhatsAppButton />
       </GoogleOAuthProvider>
     </Router>
   );

@@ -11,9 +11,9 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
   const detail = Array.isArray(singlePage)
     ? singlePage.find((item) => item.title === course)
     : null;
-  console.log(course, "courseName enquire");
-  console.log(detail, "detail enquire");
-  console.log(singlePage, "singlePage enquire");
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string[]> | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,10 +31,6 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
     }
   }, [detail]);
 
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string[]> | null>(null);
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -50,17 +46,28 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
     setSuccess(null);
     setErrors(null);
 
+    // Make sure title is set
+    const dataToSubmit = {
+      ...formData,
+      title: formData.title || detail?.title || course || "",
+    };
+
+    console.log("Data being submitted:", dataToSubmit);
+
     try {
-      await axiosInstance.post("/enroll-form/", formData);
+      await axiosInstance.post("/enroll-form/", dataToSubmit);
       setSuccess("Form submitted successfully!");
       toast.success("Form submitted successfully!");
       setFormData({
         name: "",
         phone: "",
         email: "",
-        title: "",
+        title: detail?.title || "",
       });
     } catch (error: any) {
+      console.log("Error:", error);
+      console.log("Error response:", error.response?.data);
+
       if (error.response && error.response.data) {
         setErrors(error.response.data);
       } else {
@@ -79,9 +86,12 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
     <div className="max-w-6xl mx-auto md:px-8 px-5 mt-28 grid grid-cols-1 md:grid-cols-2 mb-8  items-center text-gray-800 shadow-lg shadow-fuchsia-200">
       {/* Left Section */}
       <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold pt-6">{detail?.title.split("_")
-                .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ")}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold pt-6">
+          {detail?.title
+            .split("_")
+            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")}
+        </h1>
         <p className="text-base md:text-lg text-gray-600 leading-relaxed">
           Join our course and enhance your skills with{" "}
           <span className="text-purple-600 font-medium">expert guidance</span>.
@@ -104,10 +114,12 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
             value={formData.name}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-sm px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            required
           />
-          {errors?.message && (
-            <p className="text-red-400 text-sm">{errors.message[0]}</p>
+          {errors?.name && (
+            <p className="text-red-400 text-sm">{errors.name[0]}</p>
           )}
+
           <label htmlFor="email">Email</label>
           <input
             name="email"
@@ -116,33 +128,59 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
             value={formData.email}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-sm px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            required
           />
-          {errors?.message && (
-            <p className="text-red-400 text-sm">{errors.message[0]}</p>
+          {errors?.email && (
+            <p className="text-red-400 text-sm">{errors.email[0]}</p>
           )}
-          <label htmlFor="Phone">Phone</label>
 
+          <label htmlFor="Phone">Phone</label>
           <input
             name="phone"
             title="phone"
-            type="number"
+            type="tel"
             value={formData.phone}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-sm px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            required
           />
-          {errors?.message && (
-            <p className="text-red-400 text-sm">{errors.message[0]}</p>
+          {errors?.phone && (
+            <p className="text-red-400 text-sm">{errors.phone[0]}</p>
           )}
+
+          {/* Hidden title field for debugging */}
+          <input
+            name="title"
+            type="hidden"
+            value={formData.title || detail?.title || course || ""}
+            onChange={handleChange}
+          />
+
+          {/* Debug info */}
+          {/* <div className="text-xs text-gray-500">
+            Title: {formData.title || detail?.title || course || "NOT SET"}
+          </div> */}
 
           <button
             className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm py-2 px-6 rounded-md w-fit"
             type="submit"
+            disabled={
+              !formData.name || !formData.email || !formData.phone || submitting
+            }
           >
             {submitting ? "Submitting..." : "Enroll Now"}
           </button>
+
           {success && <p className="text-green-600 pt-4">{success}</p>}
           {errors?.general && (
             <p className="text-red-400 pt-4">{errors.general[0]}</p>
+          )}
+
+          {/* Show all errors for debugging */}
+          {errors && (
+            <div className="text-xs text-red-500">
+              <pre>{JSON.stringify(errors, null, 2)}</pre>
+            </div>
           )}
         </form>
         <div className="flex justify-between items-center mt-6 text-sm text-gray-700">

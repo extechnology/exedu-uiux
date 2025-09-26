@@ -7,6 +7,8 @@ import { BiSolidFoodMenu } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../../api/axios";
 import toast from "react-hot-toast";
+import { Bell } from "lucide-react";
+import { useNotifications } from "../../hooks/useNotifications";
 
 const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false); // Controls mobile dropdown
@@ -19,9 +21,16 @@ const Navbar = () => {
 
   const mobileMenuRef = useRef<HTMLUListElement | null>(null);
 
+  const { notifications } = useNotifications();
+
+  const studentNotifications = notifications.filter(
+    (note) => note.type === "SESSION" || note.type === "REQUEST"
+  );
+
+  const unreadCount = studentNotifications.filter((n) => !n.is_read).length;
+
   const id = localStorage.getItem("id");
 
-  // 🔒 Validate token only on non-public pages to determine true login state
   useEffect(() => {
     const checkAuth = async () => {
       if (!isPublicPage) {
@@ -99,7 +108,7 @@ const Navbar = () => {
       if (profile.can_access_profile) {
         navigate(`/profile/${id}`);
       } else {
-        navigate("/no-account"); 
+        navigate("/no-account");
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -107,7 +116,6 @@ const Navbar = () => {
       navigate("/not-found");
     }
   };
-
 
   const navLinks = [
     { label: "Home", to: "/" },
@@ -149,53 +157,68 @@ const Navbar = () => {
         </ul>
 
         {/* Profile Section */}
-        <div
-          className="relative group"
-          onMouseEnter={() => setShowProfileMenu(true)}
-          onMouseLeave={() => setShowProfileMenu(false)}
-        >
-          <div
-            onClick={handleProfileClick}
-            className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer"
-          >
-            <User className="mr-2 w-5" />
-            Profile
-          </div>
-
-          <AnimatePresence>
-            {showProfileMenu && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-lg py-2 z-50"
-              >
-                {!isLoggedIn ? (
-                  <>
-                    <Link
-                      to="/login"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/register"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                    >
-                      Signup
-                    </Link>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => handleLogout()}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
-                  >
-                    Logout
-                  </button>
+        <div className="flex items-center gap-5 content-center">
+          <Link to={"/notifications"} className="">
+            <button className="relative pt-2">
+              <div className="relative ">
+                <Bell className="w-5 h-5  text-gray-500 cursor-pointer" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium">
+                    {unreadCount}
+                  </span>
                 )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </button>
+          </Link>
+          <div className="h-6 w-px bg-gray-300" />
+          <div
+            className="relative group"
+            onMouseEnter={() => setShowProfileMenu(true)}
+            onMouseLeave={() => setShowProfileMenu(false)}
+          >
+            <div
+              onClick={handleProfileClick}
+              className="hidden md:flex items-center text-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full border-2 px-4 py-1 shadow border-gray-300 font-medium text-white cursor-pointer"
+            >
+              <User className="mr-2 w-5" />
+              Profile
+            </div>
+
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-lg py-2 z-50"
+                >
+                  {!isLoggedIn ? (
+                    <>
+                      <Link
+                        to="/login"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/register"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Signup
+                      </Link>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => handleLogout()}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                    >
+                      Logout
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}

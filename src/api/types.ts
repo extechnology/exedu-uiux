@@ -55,7 +55,10 @@ export interface Course {
   title: string;
   sub_title: string;
   description: string;
+  duration: string;
   image: string;
+  price: number;
+  paid_amount: number;
 }
 
 export interface HeroCourse {
@@ -119,6 +122,7 @@ export type StudentCertificates = {
 
 export interface Profile {
   id: number;
+  batch: number;
   certificates: StudentCertificates[];
   unique_id: string;
   name: string;
@@ -126,19 +130,48 @@ export interface Profile {
     username: string;
     email: string;
   };
+  course: number;
+  course_name: string;  
   username: string;
   email: string;
+  course_details:Course;
   profile_image: string;
   clerk_user_id: string;
   phone_number: string;
   secondary_school: string;
   secondary_year: string;
+  progress:number;
   university: string;
   university_major: string;
   university_year: string;
   career_objective: string;
   skills: string;
   experience: string;
+  paid_amount: number;
   interests: string;
   is_public: boolean;
+  enrolled_at: string;
+  payment_completed:boolean;
 };
+
+
+export interface AttendanceRecord {
+  id: number;
+  date: string;
+  status: string; 
+  attended_at?: string | null;
+  marked_by?: number;
+  student_course?: number;
+}
+
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: " LOGIN" | "PROFILE" | "ENQUIRY" | "ADMISSION";
+  related_id: number;
+  is_read: boolean;
+  created_at: string;
+  related_model: string;
+}

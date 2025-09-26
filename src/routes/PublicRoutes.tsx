@@ -13,6 +13,8 @@ const About = lazy(() => import("../pages/About"));
 const Course = lazy(() => import("../pages/Courses"));
 const Admission = lazy(() => import("../pages/Admission"));
 const PrivacyPolicy = lazy(() => import("../pages/Privacy"));
+const Notifications = lazy(() => import("../pages/Notifications"));
+const Payments = lazy(() => import("../pages/Payments"));
 const Terms = lazy(() => import("../pages/Terms"));
 const CourseSingle = lazy(() => import("../pages/CourseSinglePage"));
 const NoAccount = lazy(() => import("../pages/NoAccount"));
@@ -33,6 +35,8 @@ const PublicRoutes = () => (
       <Route path="/no-account" element={<NoAccount />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/profile/public/:uniqueId" element={<PublicProfile />} />
+      <Route path="/notifications" element={<Notifications />} />
+      <Route path="/payments" element={<Payments />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/reset" element={<PasswordResetRequestPage />} />

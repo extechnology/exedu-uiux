@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import type { Course } from "../api/types"; // make sure it's Course[]
 
 export default function useCoursePage() {
-  const [coursePage, setCoursePage] = useState<Course[]>([]); // ✅ FIXED
+  const [coursePage, setCoursePage] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     getCoursePage()
       .then((res) => {
-        setCoursePage(res); // must be Course[]
+        setCoursePage(res); 
         setLoading(false);
       })
       .catch((err) => {
