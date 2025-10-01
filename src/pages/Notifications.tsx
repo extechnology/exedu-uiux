@@ -1,15 +1,40 @@
 // NotificationsPage.tsx
-import { Bell, Clock } from "lucide-react";
+import { Bell, Clock, Check } from "lucide-react";
 import { useNotifications } from "../hooks/useNotifications";
+import axiosInstance from "../api/axios";
+import { useState, useEffect } from "react";
 
 export default function NotificationsPage() {
   const { notifications, loading, error } = useNotifications();
+  const [notificationList, setNotificationList] = useState(notifications);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  useEffect(() => {
+    // keep local state in sync with hook data
+    setNotificationList(notifications);
+  }, [notifications]);
 
-  // ✅ Filter only SESSION + REQUEST notifications
-  const studentNotifications = notifications.filter(
+  const markAsRead = async (id: string) => {
+    try {
+      // Update backend
+      await axiosInstance.patch(`/notification/${id}/mark-read/`);
+
+      // Update frontend state
+      setNotificationList((prev) =>
+        prev.map((notif) =>
+          notif.id === id ? { ...notif, is_read: true } : notif
+        )
+      );
+    } catch (error) {
+      console.error("Failed to mark notification as read", error);
+    }
+  };
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error)
+    return <div className="text-center py-10 text-red-500">{error}</div>;
+
+  // ✅ Only SESSION + REQUEST notifications
+  const studentNotifications = notificationList.filter(
     (note) => note.type === "SESSION" || note.type === "REQUEST"
   );
 
@@ -37,7 +62,7 @@ export default function NotificationsPage() {
           >
             {/* Icon */}
             <div
-              className={`p-3 rounded-full ${
+              className={`p-3 rounded-full flex items-center justify-center ${
                 note.type === "SESSION"
                   ? "bg-violet-100 text-violet-600"
                   : "bg-fuchsia-100 text-fuchsia-600"
@@ -48,14 +73,33 @@ export default function NotificationsPage() {
 
             {/* Content */}
             <div className="flex-1">
-              <h2 className="font-semibold text-lg text-gray-800">
-                {note.title}
-              </h2>
+              <div className="flex justify-between items-start">
+                <h2 className="font-semibold text-lg text-gray-800">
+                  {note.title}
+                </h2>
+
+                {/* Mark as read button */}
+                {!note.is_read ? (
+                  <button
+                    onClick={() => markAsRead(note.id)}
+                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                    title="Mark as read"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-600">
+                    Read
+                  </span>
+                )}
+              </div>
+
               <p className="text-gray-600 text-sm mt-1">{note.message}</p>
+
+              {/* Timestamp */}
               <div className="flex items-center text-gray-400 text-xs mt-2 gap-1">
                 <Clock className="h-4 w-4" />
-                {new Date(note.created_at).toLocaleString()}{" "}
-                {/* readable time */}
+                {new Date(note.created_at).toLocaleString()}
               </div>
             </div>
           </div>

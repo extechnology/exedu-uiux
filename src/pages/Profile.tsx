@@ -1,4 +1,3 @@
-import { FaUser } from "react-icons/fa";
 import AttendanceTracker from "../components/profile/AttendanceTracker";
 import ProgressSection from "../components/profile/ProgressSection";
 import { FaPaypal, FaEdit } from "react-icons/fa";
@@ -19,6 +18,7 @@ import toast from "react-hot-toast";
 import { FiFileText, FiLogOut, FiX, FiMenu } from "react-icons/fi";
 import { FiAward } from "react-icons/fi";
 import { MdOutlinePassword } from "react-icons/md";
+// import StudentProgressComponent from "../components/profile/StudentProgress";
 
 import {
   FacebookShareButton,
@@ -40,6 +40,8 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import axiosPublic from "../api/axiosPublic";
 import { useNavigate } from "react-router-dom";
+import PortFolio from "../components/profile/PortFolio";
+
 
 const Profile = () => {
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
@@ -118,7 +120,7 @@ const Profile = () => {
 
       toast.success(`Profile is now ${confirmedStatus ? "public" : "private"}`);
     } catch (err) {
-      setIsPublic(!newStatus); // Revert on failure
+      setIsPublic(!newStatus);
       toast.error("Something went wrong while updating your profile status.");
     } finally {
       setUpdatingVisibility(false);
@@ -147,7 +149,6 @@ const Profile = () => {
     toast.success("Shareable profile link copied!");
     setShowShareModal(true);
   };
-
 
   const openSectionEditor = (section: "phone" | "education" | "career") => {
     setEditingSection(section);
@@ -471,7 +472,7 @@ const Profile = () => {
           />
 
           {/* Sidebar content */}
-          <div className="relative w-64 bg-gray-200 shadow-md p-5 h-full z-50">
+          <div className="relative w-64 bg-gray-200 shadow-md h-full z-50 flex flex-col">
             {/* Close button */}
             <button
               title="Close sidebar"
@@ -481,127 +482,231 @@ const Profile = () => {
               <FiX className="w-6 h-6 text-gray-700" />
             </button>
 
-            <ul className="mt-10 space-y-4 cursor-pointer">
-              {/* copy your sidebar <li> items here */}
-              <li className="flex items-center space-x-2 text-fuchsia-500 font-semibold">
-                <FaUser />
-                <span className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
-                  My dashboard
-                </span>
-              </li>
-              <div>
-                <ul className="space-y-2">
-                  <li className="flex items-center space-x-2 bg-white p-2 rounded">
-                    <FaPaypal className="bg-white  rounded-full" />
-                    <span>Payments</span>
-                  </li>
-                  <li className="flex items-center space-x-2 bg-white p-2 rounded">
-                    <a
-                      href="https://wa.me/919072123466"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 bg-white rounded"
-                    >
-                      <LucidePaperclip className="w-4 h-4 bg-white  rounded-full" />
-                      <span>Complaints</span>
-                    </a>
-                  </li>
-                  <Link to="/admission">
-                    <li className="flex items-center space-x-2 text-gray- bg-white p-2 rounded">
-                      <PersonStanding className="w-5 h-5 bg-white  rounded-full" />
-                      <span>Supports</span>
-                    </li>
-                  </Link>
-                </ul>
-                <div className="mt-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <label className="flex items-center gap-3 cursor-pointer group">
-                      <div className="relative">
-                        <input
-                          type="checkbox"
-                          checked={isPublic}
-                          onClick={handleToggleVisibility}
-                          disabled={updatingVisibility}
-                          className="sr-only peer"
-                        />
-
-                        <div className="w-10 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {isPublic ? (
-                          <>
-                            <GlobeAltIcon className="w-5 h-5 text-violet-600" />
-                            <span className="font-medium text-gray-800 group-hover:text-violet-700 transition-colors">
-                              Your profile is public
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <LockClosedIcon className="w-5 h-5 text-gray-500" />
-                            <span className="font-medium text-sm text-gray-800 group-hover:text-violet-700 transition-colors">
-                              Make profile public
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      {updatingVisibility && (
-                        <svg
-                          className="animate-spin ml-2 h-4 w-4 text-violet-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      )}
-                    </label>
-
-                    {isPublic && (
-                      <button
-                        onClick={handleShare}
-                        className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-violet-500 text-white text-sm font-medium rounded-lg hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm hover:shadow-md active:scale-95"
+            {/* Navigation */}
+            <nav className="p-6 space-y-3 mt-8 flex-1 overflow-y-auto">
+              {/* Payments */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <Link to={"/payments"}>
+                  <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                      <FaPaypal className="text-white text-lg" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-800">
+                        Payments
+                      </span>
+                      <p className="text-xs text-gray-500">Manage billing</p>
+                    </div>
+                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                      <svg
+                        className="w-5 h-5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <ShareIcon className="w-4 h-4" />
-                        🔗 Share Profile
-                      </button>
-                    )}
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
                   </div>
+                </Link>
+              </div>
+
+              {/* Complaints */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <a
+                  href="https://wa.me/919072123466"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer "
+                >
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+                    <LucidePaperclip className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-800">
+                      Complaints
+                    </span>
+                    <p className="text-xs text-gray-500">
+                      Get help via WhatsApp
+                    </p>
+                  </div>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </div>
+                </a>
+              </div>
+
+              {/* Support */}
+              <Link to="/admission" className="group relative block">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
+                    <PersonStanding className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-800">Support</span>
+                    <p className="text-xs text-gray-500">Get assistance</p>
+                  </div>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Profile Visibility Toggle */}
+              <div className="mt-2 p-5 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-md">
+                <h3 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                  Profile Settings
+                </h3>
+
+                <div className="space-y-4">
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <div className="flex items-center gap-3">
+                      {isPublic ? (
+                        <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-lg flex items-center justify-center">
+                          <GlobeAltIcon className="w-4 h-4 text-white" />
+                        </div>
+                      ) : (
+                        <div className="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center">
+                          <LockClosedIcon className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">
+                          {isPublic ? "Public Profile" : "Private Profile"}
+                        </span>
+                        <p className="text-xs text-gray-500">
+                          {isPublic
+                            ? "Visible to everyone"
+                            : "Only visible to you"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={isPublic}
+                        onClick={handleToggleVisibility}
+                        disabled={updatingVisibility}
+                        className="sr-only peer"
+                      />
+                      <div className="w-12 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-violet-500 peer-checked:to-purple-500 shadow-inner"></div>
+                      {updatingVisibility && (
+                        <div className="absolute -right-8 top-1">
+                          <svg
+                            className="animate-spin h-4 w-4 text-violet-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </label>
 
                   {isPublic && (
-                    <p className="mt-3 text-sm text-gray-600 flex items-start gap-1.5">
-                      <InformationCircleIcon className="w-4 h-4 mt-0.5 text-violet-500 flex-shrink-0" />
-                      Your profile is visible to everyone. You can share the
-                      copied link .
-                    </p>
+                    <div className="pt-3 border-t border-gray-100">
+                      <button
+                        onClick={handleShare}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 active:scale-95 group"
+                      >
+                        <ShareIcon className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                        <span>Share Profile</span>
+                        <div className="ml-1">🔗</div>
+                      </button>
+
+                      <div className="mt-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                        <div className="flex items-start gap-2">
+                          <InformationCircleIcon className="w-4 h-4 mt-0.5 text-blue-500 flex-shrink-0" />
+                          <p className="text-xs text-blue-700 leading-relaxed">
+                            Your profile is now public and can be shared with
+                            others using the link.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
-              <Link to="/reset">
-                <li className="flex items-center space-x-2 bg-white p-2 rounded">
-                  <MdOutlinePassword />
-                  <span>Change Password</span>
-                </li>
+
+              {/* Change Password */}
+              <Link to="/reset" className="group relative block mt-2">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-sm"></div>
+                <div className="relative flex items-center space-x-4 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-lg hover:bg-white/90 transition-all duration-300 cursor-pointer">
+                  <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
+                    <MdOutlinePassword className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-800">
+                      Change Password
+                    </span>
+                    <p className="text-xs text-gray-500">Update security</p>
+                  </div>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </Link>
-              <li
-                onClick={handleLogout}
-                className="flex items-center space-x-2 mt-2 bg-red-200 p-2 rounded"
-              >
-                <FiLogOut className="text-red-600" />
-                <span className="text-red-600 font-medium">Log Out</span>
-              </li>
-            </ul>
+            </nav>
           </div>
         </div>
       )}
@@ -801,16 +906,14 @@ const Profile = () => {
                       Course Duration: {profile?.course_details?.duration}
                     </p>
                     <p className="text-gray-600">
-                      Class Start Date: {profile?.enrolled_at}
+                      Class Start Date:{" "}
+                      {profile?.enrolled_at
+                        ? new Date(profile?.enrolled_at).toLocaleDateString()
+                        : ""}
                     </p>
                   </div>
                   <div className="content-center pt-4 md:pt-0">
-                    <img
-                      src={"/online-test.png"}
-                      alt="no image"
-                      width={100}
-                      height={100}
-                    />
+                    <ProgressSection />
                   </div>
                 </div>
               </div>
@@ -821,7 +924,7 @@ const Profile = () => {
                 <AttendanceTracker
                   profileId={profile?.id || 0}
                   courseId={profile?.course || 0}
-                  batchId={profile?.batch || 0}
+                  // batchId={profile?.batch || 0}
                 />
               </div>
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
@@ -842,10 +945,9 @@ const Profile = () => {
                 {/* Certificates Grid */}
                 {Array.isArray(certificate?.certificate) && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {certificate.certificate.map((cert) => {
-                      const isPDF = cert.certificate_file
-                        .toLowerCase()
-                        .endsWith(".pdf");
+                    {certificate.certificate.map((cert, idx) => {
+                      const file = cert?.certificate_file || ""; 
+                      const isPDF = file.toLowerCase().endsWith(".pdf");
 
                       return (
                         <div
@@ -961,9 +1063,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <div>
-            <ProgressSection />
-          </div>
+
           {profile && (
             <div>
               <Skills
@@ -976,6 +1076,9 @@ const Profile = () => {
               />
             </div>
           )}
+          <div className="max-w-7xl mx-auto">
+            <PortFolio />
+          </div>
         </div>
       </main>
       <div>
@@ -1177,6 +1280,7 @@ const Profile = () => {
           </div>
         )}
       </div>
+      {/* <StudentProgressComponent/> */}
     </div>
   );
 };

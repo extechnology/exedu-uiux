@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axios";
+import type { Notification } from "../api/types";
 
-export function useNotifications(types?: string[]) {
+export function useNotifications(types?: Notification[]) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

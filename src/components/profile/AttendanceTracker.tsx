@@ -1,102 +1,173 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axiosInstance from "../../api/axios";
 import { useAttendance } from "../../hooks/useAttendance";
-import type { AttendanceRecord } from "../../api/types";
+import useProfile from "../../hooks/useProfile";
+import { useSessions } from "../../hooks/useSession";
+import axiosInstance from "../../api/axios";
 
 interface AttendanceTrackerProps {
   profileId: number;
   courseId: number;
-  batchId: number;
 }
 
-const AttendanceTracker = ({
-  profileId,
-  courseId,
-  batchId,
-}: AttendanceTrackerProps) => {
-  const { attendance, loading: attendanceLoading } = useAttendance(
-    profileId.toString(),
-    courseId
-  );
+const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
+  const { attendance } = useAttendance(profileId.toString(), courseId);
+  const { profile } = useProfile();
+  const { sessions } = useSessions();
 
   const [session, setSession] = useState<{
     active: boolean;
     session_id?: number;
-    already_marked?: boolean;
+    session?: any;
   } | null>(null);
-  const [marked, setMarked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<"daily" | "weekly">("weekly");
 
-  console.log(attendance,"attendance")
+  const [marked, setMarked] = useState(false);
+  const pending = attendance.some((rec) => rec.status === "pending");
+
+  console.log(session?.active,"session active");
+
+  function getActiveSession(sessions: any[]) {
+    const now = new Date();
+
+    for (const session of sessions) {
+      const start = new Date(session.start_time);
+
+      // Convert "HH:MM:SS" → milliseconds
+      const [h, m, s] = session.duration.split(":").map(Number);
+      const durationMs = (h * 3600 + m * 60 + s) * 1000;
+
+      const end = new Date(start.getTime() + durationMs);
+
+      if (now >= start && now <= end) {
+        return {
+          active: true,
+          session_id: session.id,
+          session,
+        };
+      }
+    }
+
+    return { active: false };
+  }
 
   useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/batches/${batchId}/active-session/`
+    if (sessions.length > 0) {
+      const activeSession = getActiveSession(sessions);
+      setSession(activeSession);
+
+      if (activeSession.active) {
+        const alreadyMarked = attendance.some(
+          (rec) =>
+            rec.session_id === activeSession.session?.id &&
+            (rec.status === "Present" || rec.status === "pending")
         );
-        setSession(res.data);
-        setMarked(res.data.already_marked || false);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+        setMarked(alreadyMarked);
+      } else {
+        setMarked(false);
       }
-    };
+    }
+  }, [sessions, attendance]);
 
-    fetchSession();
-    const interval = setInterval(fetchSession, 60 * 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const activeSession = getActiveSession(sessions);
+      setSession(activeSession);
+    }, 60 * 1000);
     return () => clearInterval(interval);
-  }, [batchId]);
+  }, [sessions]);
 
-  // ✅ Handle marking attendance
   const handleMark = async () => {
-    if (!session?.session_id) return;
+    if (!session?.active) return;
+
     try {
-      await axiosInstance.post(`/attendance/${session.session_id}/mark/`);
+      const res = await axiosInstance.post("/attendance/mark_self/", {
+        course_id: session.session.course,
+        session_id: session.session.id,
+        date: new Date().toISOString().split("T")[0],
+      });
+
+      console.log("Attendance marked:", res.data);
+
+      // Mark button immediately
       setMarked(true);
-    } catch (err: any) {
-      alert(err.response?.data?.error || "Error marking attendance");
+
+      // Optionally, add the new record to attendance list locally to prevent re-render issues
+      attendance.push(res.data); // if your hook returns mutable array
+    } catch (err) {
+      console.error("Failed to mark attendance:", err);
     }
   };
 
-  // ✅ Group records by week number
-  function getWeekNumber(dateString: string) {
-    const date = new Date(dateString);
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear =
-      (date.getTime() - firstDayOfYear.getTime()) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  function generateWeeklyGrid(startDate: Date, months: number = 3) {
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + months);
+
+    const dates: Date[] = [];
+    const current = new Date(start);
+
+    while (current <= end) {
+      dates.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
   }
 
-  const groupedByWeek = attendance.reduce(
-    (acc: Record<string, AttendanceRecord[]>, record) => {
-      const week = getWeekNumber(record.date).toString();
-      if (!acc[week]) acc[week] = [];
-      acc[week].push(record);
-      return acc;
-    },
-    {}
-  );
+  // function getDayIndex(date: Date) {
+  //   return (date.getDay() + 6) % 7; // Mon=0, Sun=6
+  // }
+
+  const attendanceMap: Record<string, "Present" | "Absent"> = {};
+  attendance.forEach((rec) => {
+    const status =
+      rec.status === "present" || rec.status === "pending"
+        ? "Present"
+        : rec.status === "absent"
+        ? "Absent"
+        : "Absent"; // fallback
+    attendanceMap[rec.date] = status;
+  });
+
+  const startDateStr = profile?.enrolled_at;
+  const courseStart = startDateStr ? new Date(startDateStr) : new Date(); // fallback to today
+
+  // ✅ Always generate the grid, even if no attendance
+  const allDates = generateWeeklyGrid(courseStart, 3);
+
+  const weeks: {
+    weekStart: Date;
+    days: { date: Date; status: "Present" | "Absent" }[];
+  }[] = [];
+
+  if (allDates.length > 0) {
+    let currentWeek: any[] = [];
+    let weekStart = allDates[0];
+
+    allDates.forEach((date) => {
+      const isoDate = date.toISOString().split("T")[0];
+      const status = attendanceMap[isoDate] || "Absent"; // default gray
+      currentWeek.push({ date, status });
+
+      if (date.getDay() === 6) {
+        weeks.push({ weekStart, days: currentWeek });
+        currentWeek = [];
+        weekStart = new Date(date);
+        weekStart.setDate(weekStart.getDate() + 1);
+      }
+    });
+
+    if (currentWeek.length > 0) {
+      weeks.push({ weekStart, days: currentWeek });
+    }
+  }
 
 
+  // --- RENDER ---
   return (
     <div className="bg-white text-black p-4 sm:p-6 rounded-2xl shadow-lg max-w-full sm:max-w-lg w-full mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-0">
-        {/* View Toggle */}
-        <select
-          title="Select View"
-          value={view}
-          onChange={(e) => setView(e.target.value as "daily" | "weekly")}
-          className="bg-gray-200 text-black p-2 rounded-lg shadow-md focus:outline-none w-full sm:w-auto"
-        >
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-        </select>
-
         <span className="text-gray-700 font-semibold text-center sm:text-right text-base sm:text-lg">
           {attendance.filter((a) => a.status === "Present").length} Days Present
         </span>
@@ -104,42 +175,59 @@ const AttendanceTracker = ({
 
       {/* Attendance Grid */}
       <div className="overflow-x-auto">
-        {attendanceLoading ? (
-          <div className="text-center py-4">Loading attendance...</div>
-        ) : view === "daily" ? (
-          <div className="grid grid-cols-7 gap-2 min-w-[500px]">
-            {attendance.map((record) => (
-              <div
-                key={record.id}
-                title={record.date}
-                className={`w-6 h-6 sm:w-6 sm:h-6 rounded-md shadow-md ${
-                  record.status === "Present" ? "bg-green-500" : "bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-2 min-w-[500px]">
-            {Object.entries(groupedByWeek).map(([week, records], idx) => (
-              <div key={idx} className="flex items-center space-x-2">
-                <span className="text-gray-700 w-16 font-semibold text-sm sm:text-base">
-                  Week {week}
-                </span>
-                {records.map((record) => (
-                  <div
-                    key={record.id}
-                    title={record.date}
-                    className={`w-6 h-6 sm:w-6 sm:h-6 rounded-md shadow-md ${
-                      record.status === "Present"
-                        ? "bg-green-500"
-                        : "bg-gray-300"
-                    }`}
-                  />
-                ))}
+        {/* Month labels */}
+        <div className="flex space-x-1 mb-2 relative left-14">
+          {weeks.map((week, idx) => {
+            const month = week.weekStart.toLocaleString("default", {
+              month: "short",
+            });
+            const prevMonth =
+              idx > 0
+                ? weeks[idx - 1].weekStart.toLocaleString("default", {
+                    month: "short",
+                  })
+                : null;
+
+            return (
+              <div key={idx} className="w-6 text-xs text-center">
+                {month !== prevMonth ? month : ""}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex">
+          {/* Day labels */}
+          <div className="flex flex-col content-center items-center justify-center gap-8 pt-3 text-xs text-gray-500 pr-2">
+            {["Mon", "Wed", "Fri"].map((d) => (
+              <div key={d} className="h-6">
+                {d}
               </div>
             ))}
           </div>
-        )}
+
+          {/* Grid */}
+          <div className="flex space-x-1">
+            {weeks.map((week, wi) => (
+              <div key={wi} className="flex flex-col space-y-1">
+                {Array.from({ length: 7 }).map((_, di) => {
+                  const record = week.days[di];
+                  const status = record?.status || "Absent"; // default to Absent
+
+                  return (
+                    <div
+                      key={di}
+                      className={`w-6 h-6 rounded-sm ${
+                        status === "Present" ? "bg-green-500" : "bg-gray-300"
+                      }`}
+                      title={record?.date.toDateString()}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Legend */}
@@ -155,22 +243,27 @@ const AttendanceTracker = ({
       </div>
 
       {/* Attendance Button */}
-      <div className="mt-6 flex justify-center">
-        {loading ? null : marked ? (
-          <span className="text-green-600 font-semibold">
-            ✅ Attendance Marked for Today
-          </span>
-        ) : session?.active ? (
+      {session?.active && pending ? (
+        <span className="text-green-600 font-semibold">
+          ✅ Attendance Marked for Session
+        </span>
+      ) : session?.active ? (
+        <div>
           <button
             onClick={handleMark}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+            disabled={marked || !session?.active}
+            className={`px-4 py-2 rounded-lg shadow-md ${
+              marked || !session?.active
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-600 text-white hover:bg-green-700"
+            }`}
           >
-            Mark Attendance
+            {marked ? "✅ Attendance Marked" : "Mark Attendance"}
           </button>
-        ) : (
-          <span className="text-gray-500">No active session right now</span>
-        )}
-      </div>
+        </div>
+      ) : (
+        <span className="text-gray-500">No active session right now</span>
+      )}
     </div>
   );
 };

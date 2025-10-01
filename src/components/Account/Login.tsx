@@ -73,7 +73,7 @@ const Login: React.FC = () => {
             <input
               type={showPassword ? "text" : "password"}
               required
-              minLength={8}
+              // minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 8 characters"

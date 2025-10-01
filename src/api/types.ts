@@ -158,10 +158,11 @@ export interface Profile {
 export interface AttendanceRecord {
   id: number;
   date: string;
-  status: string; 
+  status: string;
   attended_at?: string | null;
   marked_by?: number;
   student_course?: number;
+  session_id?: number;
 }
 
 
@@ -174,4 +175,27 @@ export interface Notification {
   is_read: boolean;
   created_at: string;
   related_model: string;
+}
+
+
+export interface Session {
+  id: number;
+  title: string;
+  course: number | null;
+  start_time: string;
+  duration: string;
+  tutor: number | null;
+  students: string[];
+  tutor_details: any; 
+  student_details: Profile[];
+}
+
+
+export interface StudentWorks {
+  id: number;
+  title: string;
+  description: string;
+  link: string;
+  image: string;
+  student: number;
 }

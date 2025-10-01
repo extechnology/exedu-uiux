@@ -1,5 +1,5 @@
 import { FaUser } from "react-icons/fa";
-import AttendanceTracker from "../components/profile/AttendanceTracker";
+// import AttendanceTracker from "../components/profile/AttendanceTracker";
 import ProgressSection from "../components/profile/ProgressSection";
 import { FaMobile, FaPaypal } from "react-icons/fa";
 import Skills from "../components/profile/SkillsSection";
@@ -13,6 +13,7 @@ import { FiAward } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import usePublicProfile from "../hooks/usePubliProfile";
 import usePublicCertificates from "../hooks/usePublicCert";
+import PortFolio from "../components/profile/PortFolio";
 
 const PublicProfile = () => {
   const [selectedCert, setSelectedCert] = useState<StudentCertificates | null>(
@@ -67,7 +68,6 @@ const PublicProfile = () => {
             <PersonStanding className="w-5 h-5 bg-gray-200  rounded-full" />
             <span>Supports</span>
           </li>
-          
         </ul>
       </aside>
 
@@ -133,9 +133,7 @@ const PublicProfile = () => {
                 </h3>
                 <p className="text-center text-gray-600 flex justify-center gap-3">
                   <span>Phone : {profile?.phone_number || "N/A"} </span>
-                  <span
-                    className="content-center cursor-pointer"
-                  >
+                  <span className="content-center cursor-pointer">
                     {/* <FaEdit
                       className="text-violet-500 cursor-pointer"
                       onClick={() =>
@@ -202,9 +200,7 @@ const PublicProfile = () => {
                       <span className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
                         Career Objective
                       </span>
-                      <span>
-                        
-                      </span>
+                      <span></span>
                     </h1>
                     <ul className="text-gray-600 pt-2 space-y-2">
                       {profile?.career_objective
@@ -235,28 +231,22 @@ const PublicProfile = () => {
                     </p>
                   </div>
                   <div className="content-center pt-4 md:pt-0">
-                    <img
-                      src={"/online-test.png"}
-                      alt="no image"
-                      width={100}
-                      height={100}
-                    />
+                      <ProgressSection />
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="mt-6 md:flex gap-6 space-y-6 md:space-y-0 ">
-              <div>
+              {/* <div>
                 <AttendanceTracker />
-              </div>
+              </div> */}
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
                 {/* Header */}
                 <div className="mb-8 flex justify-between items-center">
                   <h2 className="md:text-xl text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
                     My Certifications
                   </h2>
-                  
                 </div>
 
                 {/* Certificates Grid */}
@@ -320,7 +310,6 @@ const PublicProfile = () => {
                           <div className="w-12 h-12 bg-violet-50 rounded-full flex items-center justify-center mb-3">
                             <FiAward className="w-5 h-5 text-violet-400" />
                           </div>
-                          
                         </div>
                       ))}
                   </div>
@@ -376,9 +365,7 @@ const PublicProfile = () => {
               </div>
             </div>
           </div>
-          <div>
-            <ProgressSection />
-          </div>
+
           {profile && (
             <div>
               <Skills
@@ -388,9 +375,11 @@ const PublicProfile = () => {
               />
             </div>
           )}
+          <div>
+            <PortFolio />
+          </div>
         </div>
       </main>
-      
     </div>
   );
 };

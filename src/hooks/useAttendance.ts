@@ -3,8 +3,6 @@ import axiosInstance from "../api/axios";
 import type { AttendanceRecord } from "../api/types";
 
 
-
-
 export function useAttendance(profileId: string, courseId: number) {
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   
