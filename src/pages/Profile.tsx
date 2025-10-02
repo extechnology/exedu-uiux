@@ -945,7 +945,7 @@ const Profile = () => {
                 {/* Certificates Grid */}
                 {Array.isArray(certificate?.certificate) && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {certificate.certificate.map((cert, idx) => {
+                    {certificate.certificate.map((cert) => {
                       const file = cert?.certificate_file || ""; 
                       const isPDF = file.toLowerCase().endsWith(".pdf");
 

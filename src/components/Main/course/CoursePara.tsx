@@ -1,17 +1,23 @@
 import React from "react";
 import type { CourseProps } from "../../../api/types";
 import useSinglePage from "../../../hooks/useSinglePage";
+import { formatCourseTitle } from "../../../hooks/formatCourse";
 
-// Define props type
 
 const CoursePara: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
+
   const detail = Array.isArray(singlePage)
-    ? singlePage.find((item) => item.title === course)
+    ? singlePage.find(
+        (item) =>
+          item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+      )
     : null;
-  console.log(detail, "detail course para");
-  console.log(course, "courseName course para");
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  console.log(detail, "detail in course single page");
+
+  console.log(detail, "detail in course single page");
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   return (
     <div className="max-w-6xl mx-auto py-8">
@@ -24,7 +30,7 @@ const CoursePara: React.FC<CourseProps> = ({ course }) => {
       <div className="md:flex gap-6 py-5">
         <div className="md:w-1/3">
           <img
-            src={backendUrl + detail?.main_image}
+            src={detail?.main_image}
             alt=""
             className="px-5 md:px-0"
           />

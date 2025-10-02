@@ -1,14 +1,17 @@
 import React from "react";
 import type { CourseProps } from "../../../api/types";
 import useSinglePage from "../../../hooks/useSinglePage";
+import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const Requirements: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
   const detail = Array.isArray(singlePage)
-    ? singlePage.find((item) => item.title === course)
-    : null;
+      ? singlePage.find(
+          (item) =>
+            item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+        )
+      : null;
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const Requirements = detail?.points?.split("#") ?? [];
 
   return (
@@ -20,7 +23,7 @@ const Requirements: React.FC<CourseProps> = ({ course }) => {
       <div className="md:flex justify-center pt-10 gap-10">
         <div className="md:w-1/2">
           <img
-            src={backendUrl + detail?.second_image}
+            src={detail?.second_image}
             alt=""
             className="w-full md:w-4/5 mx-auto"
           />

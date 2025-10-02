@@ -1,24 +1,22 @@
 import React from "react";
 import type { CourseProps } from "../../../api/types";
 import useSinglePage from "../../../hooks/useSinglePage";
+import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const KeyPoints: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
   const detail = Array.isArray(singlePage)
-    ? singlePage.find((item) => item.title === course)
-    : null;
-  console.log(course, "courseName keypoints");
-  console.log(detail, "detail keypoints");
-  console.log(singlePage, "singlePage keypoints");
+      ? singlePage.find(
+          (item) =>
+            item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+        )
+      : null;
 
-  {
-    /** Extract and split keyPoints into 2 columns */
-  }
   const keyPointsArray = detail?.keyPoints?.split("#") ?? [];
   const midpoint = Math.ceil(keyPointsArray.length / 2);
   const firstColumn = keyPointsArray.slice(0, midpoint);
   const secondColumn = keyPointsArray.slice(midpoint);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
   return (
@@ -31,7 +29,7 @@ const KeyPoints: React.FC<CourseProps> = ({ course }) => {
 
       {/* Image */}
       <img
-        src={backendUrl + detail?.third_image}
+        src={ detail?.third_image}
         alt="Corporate Meeting"
         className="w-[95%] mx-auto mb-10 rounded shadow"
       />

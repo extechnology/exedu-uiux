@@ -1,12 +1,16 @@
 import React from "react";
 import type { CourseProps } from "../../../api/types";
 import useSinglePage from "../../../hooks/useSinglePage";
+import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const OurSpecialties: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
-  const detail = Array.isArray(singlePage)
-    ? singlePage.find((item) => item.title === course)
-    : null;
+ const detail = Array.isArray(singlePage)
+     ? singlePage.find(
+         (item) =>
+           item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+       )
+     : null;
   const specialties = detail?.specialties?.split("#") ?? [];
   // console.log(course, "courseName");
   // console.log(detail, "detail");
