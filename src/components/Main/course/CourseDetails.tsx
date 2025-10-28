@@ -4,6 +4,8 @@ import useCoursePage from "../../../hooks/useCoursePage";
 
 const CourseDetails = () => {
   const { coursePage, loading, error } = useCoursePage();
+  const title = coursePage?.map((course: any) => course.title);
+  console.log(title, "title");
   console.log(coursePage, "coursePage");
   console.log(typeof coursePage, "typeof coursePage");
 
@@ -53,7 +55,7 @@ const CourseDetails = () => {
 
             <div className="flex justify-center">
               <Link
-                to={`/single/${detail.id}`}
+                to={`/single/${detail.title}`}
                 state={{ course: detail.title }}
               >
                 <button

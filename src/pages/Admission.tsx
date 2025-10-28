@@ -18,7 +18,7 @@ export default function Admission() {
   });
 
   const courseOptions = [
-    "AI Hybrid Digital Marketing",
+    "AI Advanced Digital Marketing",
     "Graphic Design",
     "Web/App Development",
     "UI/UX Design",

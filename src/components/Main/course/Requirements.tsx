@@ -5,14 +5,26 @@ import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const Requirements: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
+
+  const normalizeTitle = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[_\-\/]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  };
+
   const detail = Array.isArray(singlePage)
-      ? singlePage.find(
-          (item) =>
-            item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
-        )
-      : null;
+    ? singlePage.find(
+        (item) =>
+          normalizeTitle(item.title) === formatCourseTitle(course).toLowerCase()
+      )
+    : null;
 
   const Requirements = detail?.points?.split("#") ?? [];
+  console.log(Requirements, "Requirements");
+  console.log(detail, "detail");
 
   return (
     <div className="max-w-6xl mx-auto md:pb-5">
@@ -35,7 +47,7 @@ const Requirements: React.FC<CourseProps> = ({ course }) => {
                 key={index}
                 className="flex items-center gap-2 text-sm md:text-base"
               >
-                <span className="text-fuchsia-600 text-xl">✔</span>
+                {/* <span className="text-fuchsia-600 text-xl">✔</span> */}
                 <span className="text-lg">{point}</span>
               </li>
             ))}

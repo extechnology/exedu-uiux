@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +98,9 @@ const Login: React.FC = () => {
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
+          <Link to="/reset" className="text-blue-400 text-end">
+            forgot your password?
+          </Link>
         </form>
         {/* Divider */}
         <div className="text-center text-gray-500 text-sm">Or</div>

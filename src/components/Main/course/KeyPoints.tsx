@@ -5,10 +5,19 @@ import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const KeyPoints: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
+
+  const normalizeTitle = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[_\-\/]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  };
   const detail = Array.isArray(singlePage)
       ? singlePage.find(
           (item) =>
-            item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+            normalizeTitle(item.title) === formatCourseTitle(course).toLowerCase()
         )
       : null;
 
@@ -30,7 +39,7 @@ const KeyPoints: React.FC<CourseProps> = ({ course }) => {
       {/* Image */}
       <img
         src={ detail?.third_image}
-        alt="Corporate Meeting"
+        alt="no image to show"
         className="w-[95%] mx-auto mb-10 rounded shadow"
       />
 

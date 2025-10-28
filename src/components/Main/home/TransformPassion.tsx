@@ -72,7 +72,7 @@ const TransformPassion = () => {
             data-aos="zoom-in"
             data-aos-duration="1100"
           >
-            Unlock your future with exedu! Mater Digital Marketing , Graphic
+            Unlock your future with exedu! Master Digital Marketing , Graphic
             Design, Prompt AI and Robotics.Transform your Skills, Embrace
             Innovation, and lead the tech revolution.Enroll today and shape
             tomorrow with Hybrid AI Education!{" "}

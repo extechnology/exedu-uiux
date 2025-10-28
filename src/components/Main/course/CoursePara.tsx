@@ -3,14 +3,24 @@ import type { CourseProps } from "../../../api/types";
 import useSinglePage from "../../../hooks/useSinglePage";
 import { formatCourseTitle } from "../../../hooks/formatCourse";
 
-
 const CoursePara: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
+  console.log(singlePage, "singlePage in course para");
+  console.log(course, "course in course para from prop");
+
+  const normalizeTitle = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[_\-\/]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  };
 
   const detail = Array.isArray(singlePage)
     ? singlePage.find(
         (item) =>
-          item.title.toLowerCase() === formatCourseTitle(course).toLowerCase()
+          normalizeTitle(item.title) === formatCourseTitle(course).toLowerCase()
       )
     : null;
 
@@ -29,11 +39,7 @@ const CoursePara: React.FC<CourseProps> = ({ course }) => {
       </h1>
       <div className="md:flex gap-6 py-5">
         <div className="md:w-1/3">
-          <img
-            src={detail?.main_image}
-            alt=""
-            className="px-5 md:px-0"
-          />
+          <img src={detail?.main_image} alt="" className="px-5 md:px-0" />
         </div>
         <div className="content-center md:w-2/3">
           <p className="text-justify px-5 md:px-0 pt-5">

@@ -63,7 +63,7 @@ const AdvancedCourse = () => {
                   {course.sub_title}
                 </p>
                 <Link
-                  to={`/single/${course.id}`}
+                  to={`/single/${course.title}`}
                   state={{ course: course.title }}
                 >
                   <button

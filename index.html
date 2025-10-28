@@ -2,13 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpg+xml" href="/exedu-favicon.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="/exedu-favicon.jpg" />
+    <title>exedu - Hybrid AI Education</title>
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google site verification -->
+    <meta
+      name="google-site-verification"
+      content="_MVDh3uDH4x6KLcyFWI9USTBJkvjzQMeOeTBwZLCwck"
+    />
+
+    <!-- Google Tag (gtag.js) -->
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-E7ZEFP5V90"
+      src="https://www.googletagmanager.com/gtag/js?id=G-6E2ZDBB105"
     ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,7 +23,51 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-E7ZEFP5V90");
+      gtag("config", "G-6E2ZDBB105");
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-N62LCGFS");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Ads Conversion Tracking -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=AW-11434608768"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "AW-11434608768");
+
+      function gtag_report_conversion(url) {
+        var callback = function () {
+          if (typeof url !== "undefined") {
+            window.location = url;
+          }
+        };
+        gtag("event", "conversion", {
+          send_to: "AW-11434608768/NltQCJ-O6bAbEICRucwq",
+          value: 1.0,
+          currency: "INR",
+          event_callback: callback,
+        });
+        return false;
+      }
     </script>
 
     <!-- Meta Pixel Code -->
@@ -48,13 +99,22 @@
       fbq("track", "PageView");
     </script>
     <!-- End Meta Pixel Code -->
-
-    <title>exedu - Hybrid AI Education</title>
   </head>
+
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-N62LCGFS"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+
     <div id="root"></div>
 
-    <!-- Move <noscript> here -->
+    <!-- Meta Pixel (noscript) -->
     <noscript>
       <img
         height="1"
@@ -64,6 +124,7 @@
       />
     </noscript>
 
+    <!-- ✅ Vite entry point -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

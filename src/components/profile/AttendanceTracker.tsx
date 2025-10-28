@@ -24,6 +24,9 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
 
   const [marked, setMarked] = useState(false);
   const pending = attendance.some((rec) => rec.status === "pending");
+  console.log(pending,"pending");
+  console.log(marked,"marked");
+
 
   console.log(session?.active,"session active");
 
@@ -89,11 +92,9 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
 
       console.log("Attendance marked:", res.data);
 
-      // Mark button immediately
       setMarked(true);
 
-      // Optionally, add the new record to attendance list locally to prevent re-render issues
-      attendance.push(res.data); // if your hook returns mutable array
+      attendance.push(res.data); 
     } catch (err) {
       console.error("Failed to mark attendance:", err);
     }
@@ -126,14 +127,13 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
         ? "Present"
         : rec.status === "absent"
         ? "Absent"
-        : "Absent"; // fallback
+        : "Absent"; 
     attendanceMap[rec.date] = status;
   });
 
   const startDateStr = profile?.enrolled_at;
-  const courseStart = startDateStr ? new Date(startDateStr) : new Date(); // fallback to today
+  const courseStart = startDateStr ? new Date(startDateStr) : new Date(); 
 
-  // ✅ Always generate the grid, even if no attendance
   const allDates = generateWeeklyGrid(courseStart, 3);
 
   const weeks: {
@@ -147,7 +147,7 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
 
     allDates.forEach((date) => {
       const isoDate = date.toISOString().split("T")[0];
-      const status = attendanceMap[isoDate] || "Absent"; // default gray
+      const status = attendanceMap[isoDate] || "Absent"; 
       currentWeek.push({ date, status });
 
       if (date.getDay() === 6) {
@@ -243,12 +243,12 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
       </div>
 
       {/* Attendance Button */}
-      {session?.active && pending ? (
+      {marked  ? (
         <span className="text-green-600 font-semibold">
           ✅ Attendance Marked for Session
         </span>
       ) : session?.active ? (
-        <div>
+        <div className="flex justify-between">
           <button
             onClick={handleMark}
             disabled={marked || !session?.active}
@@ -260,6 +260,7 @@ const AttendanceTracker = ({ profileId, courseId }: AttendanceTrackerProps) => {
           >
             {marked ? "✅ Attendance Marked" : "Mark Attendance"}
           </button>
+          <h1 className="content-center font-semibold text-green-600">session is Active</h1>
         </div>
       ) : (
         <span className="text-gray-500">No active session right now</span>
