@@ -120,9 +120,17 @@ export type StudentCertificates = {
   profile: number;
 };
 
+export interface Batch {
+  course : Course;
+  time_start: string;
+  end_date: string;
+  date: string;
+  batch_number: number;
+}
+
 export interface Profile {
   id: number;
-  batch: number;
+  batch_details: Batch;
   certificates: StudentCertificates[];
   unique_id: string;
   name: string;
@@ -131,16 +139,16 @@ export interface Profile {
     email: string;
   };
   course: number;
-  course_name: string;  
+  course_name: string;
   username: string;
   email: string;
-  course_details:Course;
+  course_details: Course;
   profile_image: string;
   clerk_user_id: string;
   phone_number: string;
   secondary_school: string;
   secondary_year: string;
-  progress:number;
+  progress: number;
   university: string;
   university_major: string;
   university_year: string;
@@ -150,8 +158,10 @@ export interface Profile {
   paid_amount: number;
   interests: string;
   is_public: boolean;
+  region:number;
+  region_name:string;
   enrolled_at: string;
-  payment_completed:boolean;
+  payment_completed: boolean;
 };
 
 

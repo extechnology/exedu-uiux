@@ -60,6 +60,7 @@ const Profile = () => {
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
   const { profile, loading, error } = useProfile();
+  console.log(profile, "profile");
   const [localProfile, setLocalProfile] = useState(profile);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [editingField, setEditingField] = useState<null | {
@@ -737,6 +738,9 @@ const Profile = () => {
 
           {/* Right section: Profile */}
           <div className="flex items-center space-x-4 md:pr-4">
+            <div> 
+              <h2 className="pr-5 font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">{profile?.region_name}</h2>
+            </div>
             <div className="flex items-center space-x-2">
               <img
                 src={
@@ -924,7 +928,8 @@ const Profile = () => {
                 <AttendanceTracker
                   profileId={profile?.id || 0}
                   courseId={profile?.course || 0}
-                  // batchId={profile?.batch || 0}
+                  batchDate={profile?.batch_details?.date || ""}
+                  duration={profile?.course_details?.duration || ""}
                 />
               </div>
               <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-full">
