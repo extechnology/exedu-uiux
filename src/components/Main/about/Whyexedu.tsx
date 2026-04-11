@@ -22,34 +22,29 @@ const Whyexedu = () => {
             data-aos="fade-down"
             className="md:text-4xl text-3xl font-bold text-fuchsia-700 md:py-4"
           >
-            Why Choose exedu
+            Why choose exedu
           </h1>
           <p
             data-aos="fade-up"
             className="md:text-lg text-md pt-3 text-justify"
           >
-            exedu is a leading Hybrid AI Education institute, merging advanced
-            technology with innovative learning. Offering courses in Digital
-            Marketing with Graphics Design & Prompt AI, Graphics Design,
-            Robotics, Web & Mobile Applications & UX-UI Design, exedu prepares
-            students for the digital future. With AI-driven tools and hands-on
-            training, the institute bridges theory and practice, delivering a
-            dynamic, industry-aligned education. Whether mastering design, AI in
-            marketing, or robotics, exedu provides future-focused skills to meet
-            modern industry demands. We are executing all the learning and
-            interaction sessions with Highly Professional and Talented Faculty
-            and Mentors, also provide an Internship program with Live and Client
-            Delivering Projects.
+            exedu hybrid AI-driven education combined with agency-based learning
+            experience. We bridge the gap between traditional education and
+            modern industry demands by offering specialized professional courses
+            driven by real-world projects.We aim to equip learners with
+            future-ready skills that enhance creativity, innovation, and career
+            success, ensuring they are fully prepared for the evolving digital
+            world.
           </p>
         </div>
         <div className="md:w-1/3 pt-5 md:pt-0" data-aos="fade-up">
-            <img
-              src={BACKEND_URL + whyImage.image}
-              width={500}
-              height={500}
-              alt="no image"
-              className="md:w-[80%] w-[90%] mx-auto rounded-2xl"
-            />
+          <img
+            src={BACKEND_URL + whyImage.image}
+            width={500}
+            height={500}
+            alt="no image"
+            className="md:w-[80%] w-[90%] mx-auto rounded-2xl"
+          />
         </div>
       </div>
     </div>

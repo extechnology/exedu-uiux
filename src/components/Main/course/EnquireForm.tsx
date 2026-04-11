@@ -193,7 +193,14 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
               Chat with course counselor
             </button>
           </a>
-          <button className="hover:underline">Download Brochure</button>
+          <a
+            href="/exedu-brochure.pdf"
+            download="Exedu_Brochure.pdf"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <button className="hover:underline cursor-pointer" type="button">Download Brochure</button>
+          </a>
         </div>
       </div>
     </div>

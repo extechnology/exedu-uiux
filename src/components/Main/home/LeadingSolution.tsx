@@ -52,9 +52,10 @@ const LeadingSolution = () => {
             data-aos="fade-up"
             data-aos-duration="1200"
           >
-            The Most Talented Education Solution for Your Success.Empowering
-            Students with Quality Learning,Expert Guidance and Proven Results,
-            Merging Advanced Technology with Innovative Learning.
+            The best digital marketing institution in Calicut, we deliver
+            innovative digital education powered by advanced technology,
+            AI-driven strategies, and personalized learning programs to ensure
+            career success and industry-ready skills.
           </p>
         </div>
       </div>
