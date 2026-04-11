@@ -5,8 +5,8 @@ import { formatCourseTitle } from "../../../hooks/formatCourse";
 
 const CoursePara: React.FC<CourseProps> = ({ course }) => {
   const { singlePage } = useSinglePage();
-  console.log(singlePage, "singlePage in course para");
-  console.log(course, "course in course para from prop");
+  // console.log(singlePage, "singlePage in course para");
+  // console.log(course, "course in course para from prop");
 
   const normalizeTitle = (title: string) => {
     return title
@@ -24,9 +24,9 @@ const CoursePara: React.FC<CourseProps> = ({ course }) => {
       )
     : null;
 
-  console.log(detail, "detail in course single page");
+  // console.log(detail, "detail in course single page");
 
-  console.log(detail, "detail in course single page");
+  // console.log(detail, "detail in course single page");
   // const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   return (

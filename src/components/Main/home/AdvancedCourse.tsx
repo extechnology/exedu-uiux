@@ -5,7 +5,6 @@ import type { HeroCourse } from "../../../api/types";
 
 const AdvancedCourse = () => {
   const { heroCourse, loading, error } = useHeroCourse();
-  console.log(heroCourse, "heroCourse");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   if (loading) return <Loader />;

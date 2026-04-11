@@ -52,7 +52,6 @@ const EnquireForm: React.FC<CourseProps> = ({ course }) => {
       title: formData.title || detail?.title || course || "",
     };
 
-    console.log("Data being submitted:", dataToSubmit);
 
     try {
       await axiosInstance.post("/enroll-form/", dataToSubmit);

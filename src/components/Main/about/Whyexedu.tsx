@@ -28,13 +28,16 @@ const Whyexedu = () => {
             data-aos="fade-up"
             className="md:text-lg text-md pt-3 text-justify"
           >
-            exedu hybrid AI-driven education combined with agency-based learning
-            experience. We bridge the gap between traditional education and
-            modern industry demands by offering specialized professional courses
-            driven by real-world projects.We aim to equip learners with
-            future-ready skills that enhance creativity, innovation, and career
-            success, ensuring they are fully prepared for the evolving digital
-            world.
+            exedu AI Hybrid Education Institute is a leading next-generation
+            learning platform, operating under Exmedia, a 15+ years experienced
+            digital agency. We offer advanced courses in Digital Marketing with
+            Graphic Design & Prompt AI, Graphic Design, Robotics, Web & Mobile
+            Application Development, and UX/UI Design.At Exedu, learning goes
+            beyond theory—students gain real-world exposure by working on live
+            industry projects and client-based assignments, ensuring strong
+            hands-on experience.Our AI-driven learning system combines
+            innovation with practical training, helping students master both
+            creative and technical skills
           </p>
         </div>
         <div className="md:w-1/3 pt-5 md:pt-0" data-aos="fade-up">

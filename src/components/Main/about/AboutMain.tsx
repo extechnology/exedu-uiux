@@ -13,7 +13,6 @@ const AboutMain = () => {
   );
 
 
-  console.log(aboutImage,aboutImage);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const style: React.CSSProperties = {

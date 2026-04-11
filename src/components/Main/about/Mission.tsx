@@ -38,14 +38,13 @@ function Mission() {
             data-aos="fade-up"
             className="md:w-[90%] text-white text-md text-justify py-5"
           >
-            exedu’s mission is to empower learners with cutting-edge skills and
-            knowledge through innovative, hybrid AI-driven education. We aim to
-            bridge the gap between traditional learning and modern industry
-            demands by offering specialized professional courses By combining
-            advanced technology, hands-on training, and expert guidance, we
-            strive to equip students with the tools to excel in a rapidly
-            evolving digital world, fostering creativity, innovation, and
-            career-ready expertise.
+            exedu hybrid AI-driven education combined with agency-based learning
+            experience. We bridge the gap between traditional education and
+            modern industry demands by offering specialized professional courses
+            driven by real-world projects.We aim to equip learners with
+            future-ready skills that enhance creativity, innovation, and career
+            success, ensuring they are fully prepared for the evolving digital
+            world.
           </p>
           <div
             data-aos="fade-up"

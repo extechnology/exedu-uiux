@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const DiscussTogether = () => {
   const { sectionImages, loading, error } = useSectionImages();
 
-  console.log(sectionImages);
 
   const discussImage: SectionImage | undefined = sectionImages.find(
     (img: SectionImage) => img.section === "discuss_together"

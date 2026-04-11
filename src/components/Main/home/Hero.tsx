@@ -10,11 +10,9 @@ const Hero = () => {
     (img: SectionImage) => img.section === "hero"
   );
 
-  console.log(heroImage,"heroImage");
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, ""); 
   const imagePath = heroImage?.image?.replace(/^\/+/, "");
-  console.log(imagePath,"imagePath");
 
   
 

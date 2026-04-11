@@ -23,8 +23,6 @@ const Requirements: React.FC<CourseProps> = ({ course }) => {
     : null;
 
   const Requirements = detail?.points?.split("#") ?? [];
-  console.log(Requirements, "Requirements");
-  console.log(detail, "detail");
 
   return (
     <div className="max-w-6xl mx-auto md:pb-5">
