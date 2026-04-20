@@ -4,6 +4,8 @@ import {
   FaYoutube,
   FaPinterest,
   FaLinkedin,
+  FaWhatsapp,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { useState } from "react";
@@ -34,13 +36,45 @@ const Footer: React.FC = () => {
         </div>
         <div>
           <h1 className="font-medium text-xl">Contact</h1>
-          <ul className="space-y-2 pt-4 text-sm">
+          <ul className="space-y-3 pt-4 text-sm text-gray-300">
             <li>Room No: 20/884,</li>
             <li>Opposite Bus Stand,</li>
             <li>Ramanattukara, Kozhikode</li>
             <li>Kerala 673633 </li>
-            <li>Ph: +91 9072123466</li>
-            <li>Email : exeduone@gmail.com</li>
+
+            {/* Contact Numbers with Icons */}
+            <div className="flex flex-col gap-3 py-2">
+              <li className="pt-1">
+                <span className="font-medium text-white">Email:</span>{" "}
+                <a
+                  href="mailto:exeduone@gmail.com"
+                  className="hover:text-white transition-colors"
+                >
+                  exeduone@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-sm text-white/90">
+                <FaWhatsapp className="w-4 h-4 text-green-400" />
+                <a
+                  href="https://wa.me/919072123466"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  +91 9562123466
+                </a>
+              </li>
+
+              <li className="flex items-center gap-3 text-sm text-white/90">
+                <FaPhoneAlt className="w-4 h-4 text-blue-400" />
+                <a
+                  href="tel:+919652123466"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  +91 9072123466
+                </a>
+              </li>
+            </div>
           </ul>
         </div>
         <div>
@@ -130,7 +164,11 @@ const Footer: React.FC = () => {
             </p>
             <p className="text-sm md:text-center font-light text-gray-300">
               powered by{" "}
-              <a href="https://extechnology.in" target="_blank" rel="noreferrer noopener">
+              <a
+                href="https://extechnology.in"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 <span className="font-bold pl-1">extechnology</span>
               </a>
             </p>

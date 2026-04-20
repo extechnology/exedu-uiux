@@ -1,6 +1,7 @@
 import { FaLocationDot } from "react-icons/fa6";
 import { FiPhoneCall } from "react-icons/fi";
 import { IoIosMail } from "react-icons/io";
+import { FaWhatsapp } from "react-icons/fa";
 import { useSectionImages } from "../hooks/useSectionImages";
 import Loader from "../components/common/Loader";
 import type { SectionImage } from "../api/types";
@@ -234,11 +235,21 @@ export default function Admission() {
             </li>
             <li className="flex items-start gap-2 text-left">
               <FiPhoneCall className="relative top-1 text-fuchsia-600" />
-              9072123466
+              <a href="tel:+919072123466" className="hover:text-fuchsia-600 transition-colors">
+                9072123466
+              </a>
+            </li>
+            <li className="flex items-start gap-2 text-left">
+              <FaWhatsapp className="relative top-1 text-fuchsia-600" />
+              <a href="https://wa.me/919562123466" target="_blank" rel="noopener noreferrer" className="hover:text-fuchsia-600 transition-colors">
+                9562123466
+              </a>
             </li>
             <li className="flex items-start gap-2 text-left">
               <IoIosMail className="relative top-1 text-fuchsia-600" />
-              exeduone@gmail.com
+              <a href="mailto:exeduone@gmail.com" className="hover:text-fuchsia-600 transition-colors">
+                exeduone@gmail.com
+              </a>
             </li>
           </ul>
         </div>
