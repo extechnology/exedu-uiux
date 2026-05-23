@@ -8,207 +8,200 @@ import {
   FaPhoneAlt,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
-  const [showPopup, setShowPopup] = useState(false);
   return (
-    <div className="bg-gradient-to-r relative z-[40] from-slate-800 to-slate-900 text-white pt-10 pb-5 shadow-t-2xl">
-      <div className="grid grid-cols-1 md:grid-cols-4 max-w-7xl mx-auto px-5 space-y-8 md:space-y-0">
-        <div>
-          <h1 className="font-medium text-xl">Quick Links</h1>
-          <ul className="space-y-2 text-sm pt-4">
-            <Link to={"/"}>
-              <li>Home</li>
-            </Link>
-            <Link to={"/about"}>
-              <li>About</li>
-            </Link>
-            <Link to={"/course"}>
-              <li>Courses</li>
-            </Link>
-            <Link to={"/admission"}>
-              <li>Admission</li>
-            </Link>
-          </ul>
-        </div>
-        <div>
-          <h1 className="font-medium text-xl">Contact</h1>
-          <ul className="space-y-3 pt-4 text-sm text-gray-300">
-            <li>Room No: 20/884,</li>
-            <li>Opposite Bus Stand,</li>
-            <li>Ramanattukara, Kozhikode</li>
-            <li>Kerala 673633 </li>
+    <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white relative z-[40]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
+        {/* TOP SECTION */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* Quick Links */}
+          <div>
+            <h2 className="text-lg font-semibold mb-6">Quick Links</h2>
 
-            {/* Contact Numbers with Icons */}
-            <div className="flex flex-col gap-3 py-2">
-              <li className="pt-1">
-                <span className="font-medium text-white">Email:</span>{" "}
+            <ul className="space-y-3 text-sm text-gray-300">
+              <Link to="/">
+                <li className="hover:text-white transition">Home</li>
+              </Link>
+              <Link to="/about">
+                <li className="hover:text-white transition">About</li>
+              </Link>
+              <Link to="/course">
+                <li className="hover:text-white transition">Courses</li>
+              </Link>
+              <Link to="/admission">
+                <li className="hover:text-white transition">Admission</li>
+              </Link>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="lg:col-span-2">
+            <h2 className="text-lg font-semibold mb-6">Contact</h2>
+
+            <div className="grid sm:grid-cols-2 gap-8">
+              <div className="border-l border-white/20 pl-4">
+                {/* <p className="uppercase text-xs tracking-widest text-white/70 mb-3 font-semibold">
+                  Head Office
+                </p> */}
+
+                <ul className="space-y-1 text-sm text-gray-300 leading-7">
+                  <li>Room No: 20/884,</li>
+                  <li>Opposite Bus Stand,</li>
+                  <li>Ramanattukara, Kozhikode</li>
+                  <li>Kerala : 673633</li>
+                </ul>
+              </div>
+
+              <div className="border-l border-white/20 pl-4">
+                {/* <p className="uppercase text-xs tracking-widest text-white/70 mb-3 font-semibold">
+                  Branch Office
+                </p> */}
+
+                <ul className="space-y-1 text-sm text-gray-300 leading-7">
+                  <li>Unit No: 9, Ground Floor,</li>
+                  <li>KINFRA Advanced Technology Park,</li>
+                  <li>Ramanattukara, Kozhikode</li>
+                  <li>Kerala : 673631</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 flex gap-5 text-sm">
+              <div className="text-gray-300">
+                <span className="text-white font-medium">Email:</span>{" "}
                 <a
                   href="mailto:exeduone@gmail.com"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-white transition"
                 >
                   exeduone@gmail.com
                 </a>
-              </li>
-              <li className="flex items-center gap-3 text-sm text-white/90">
-                <FaWhatsapp className="w-4 h-4 text-green-400" />
+              </div>
+
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaWhatsapp className="text-green-400" />
+
                 <a
                   href="https://wa.me/919072123466"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-green-400 transition-colors"
+                  className="hover:text-green-400 transition"
                 >
                   +91 9562123466
                 </a>
-              </li>
+              </div>
 
-              <li className="flex items-center gap-3 text-sm text-white/90">
-                <FaPhoneAlt className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaPhoneAlt className="text-blue-400" />
+
                 <a
                   href="tel:+919652123466"
-                  className="hover:text-blue-400 transition-colors"
+                  className="hover:text-blue-400 transition"
                 >
                   +91 9072123466
                 </a>
-              </li>
+              </div>
             </div>
-          </ul>
-        </div>
-        <div>
-          <h1 className="font-medium text-xl">Follow Us</h1>
-          <ul className="flex space-x-5 pt-4">
-            <li>
-              <Link
-                target="_blank"
-                to="https://www.instagram.com/exedu.in?igsh=bnFpeDk5b2tucWZq"
-              >
-                <FaInstagram className="w-6 h-6" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                target="_blank"
-                to="https://www.facebook.com/profile.php?id=61573566939195"
-              >
-                <FaFacebook className="w-6 h-6" />
-              </Link>
-            </li>
-            <li>
-              <Link target="_blank" to="https://www.youtube.com/@Exeduai">
-                <FaYoutube className="w-6 h-6" />
-              </Link>
-            </li>
-            <li>
-              <Link target="_blank" to="https://x.com/Exedu_">
-                <FaXTwitter className="w-6 h-6" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                target="_blank"
-                to="https://www.linkedin.com/company/exedus/"
-              >
-                <FaLinkedin className="w-6 h-6" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                target="_blank"
-                to="https://in.pinterest.com/exedu_/_profile/"
-              >
-                <FaPinterest className="w-6 h-6" />
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="flex-col justify-center space-y-8">
-          <div className="flex md:justify-end">
+          </div>
+
+          {/* Social + Logo */}
+          <div className="flex justify-between flex-col lg:items-end gap-8">
             <img
               src="/ex_edu_logo-03.png"
               alt="logo"
-              width={200}
-              height={200}
-              className=""
+              width={180}
+              height={180}
+              className="object-contain"
             />
+
+            <div className="content-end">
+              <h2 className="text-lg font-semibold mb-5">Follow Us</h2>
+
+              <ul className="flex flex-wrap gap-5 text-gray-300">
+                <Link
+                  target="_blank"
+                  to="https://www.instagram.com/exedu.in?igsh=bnFpeDk5b2tucWZq"
+                >
+                  <FaInstagram className="w-5 h-5 hover:text-pink-400 transition" />
+                </Link>
+
+                <Link
+                  target="_blank"
+                  to="https://www.facebook.com/profile.php?id=61573566939195"
+                >
+                  <FaFacebook className="w-5 h-5 hover:text-blue-400 transition" />
+                </Link>
+
+                <Link target="_blank" to="https://www.youtube.com/@Exeduai">
+                  <FaYoutube className="w-5 h-5 hover:text-red-400 transition" />
+                </Link>
+
+                <Link target="_blank" to="https://x.com/Exedu_">
+                  <FaXTwitter className="w-5 h-5 hover:text-white transition" />
+                </Link>
+
+                <Link
+                  target="_blank"
+                  to="https://www.linkedin.com/company/exedus/"
+                >
+                  <FaLinkedin className="w-5 h-5 hover:text-blue-500 transition" />
+                </Link>
+
+                <Link
+                  target="_blank"
+                  to="https://in.pinterest.com/exedu_/_profile/"
+                >
+                  <FaPinterest className="w-5 h-5 hover:text-red-500 transition" />
+                </Link>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <hr className=" mt-10 text-slate-700 border-[1px]" />
-      <div className=" max-w-7xl mx-auto px-5 pt-5">
-        <div className="grid grid-cols-1 md:grid-cols-3 space-y-4 md:space-y-0">
-          <div className="">
-            {/* <img src="/EX_TECHNOLOGY_LOGO-01.png" alt="" height={70} width={70} /> */}
-            <p className="text-sm font-light text-gray-300">
-              Our Parent Company is{" "}
-              <span className="font-bold pl-1">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://exmedia.in/"
-                >
-                  exmedia
-                </a>
-              </span>
-            </p>
-          </div>
-          <div className="relative  md:justify-center">
-            <p
-              className="cursor-pointer md:text-center hover:text-gray-200 transition-all text-sm text-gray-300 font-light"
-              onMouseEnter={() => setShowPopup(true)}
-              onMouseLeave={() => setShowPopup(false)}
+
+        {/* Divider */}
+        <div className="border-t border-slate-700 my-10" />
+
+        {/* Bottom Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 text-sm text-gray-300">
+          <div>
+            Our Parent Company is{" "}
+            <a
+              href="https://exmedia.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold hover:text-white transition"
             >
-              Copyright &copy; 2025 exedu. All rights reserved.
-            </p>
-            <p className="text-sm md:text-center font-light text-gray-300">
+              exmedia
+            </a>
+          </div>
+
+          <div className="text-center space-y-2">
+            <p>Copyright © 2025 exedu. All rights reserved.</p>
+
+            <p>
               powered by{" "}
               <a
                 href="https://extechnology.in"
                 target="_blank"
-                rel="noreferrer noopener"
+                rel="noreferrer"
+                className="font-semibold hover:text-white transition"
               >
-                <span className="font-bold pl-1">extechnology</span>
+                extechnology
               </a>
             </p>
-
-            <AnimatePresence>
-              {showPopup && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[90vw] max-w-lg p-4 bg-white/90 backdrop-blur-lg shadow-lg rounded-lg border border-gray-300 text-gray-800 text-sm z-50"
-                >
-                  <p>
-                    Our content, as found within our website (
-                    <a
-                      href="https://www.exedu.in"
-                      className="text-blue-500 underline"
-                    >
-                      www.exedu.in
-                    </a>
-                    ), is owned by or licensed to us. This includes, but is not
-                    limited to, the design, layout, images, and graphics,
-                    protected under The Copyright Act 1957. Copying,
-                    redistribution, or reproduction is strictly prohibited. Your
-                    use of our website does not grant ownership rights to our
-                    content.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
-          <div className="flex md:justify-end text-sm font-light gap-1 text-gray-300">
-            <div>
-              <Link to={"/privacy"}>Privacy Policy |</Link>
-            </div>
-            <div>
-              <Link to={"/terms"}>Terms & Conditions </Link>
-            </div>
+          <div className="flex gap-2">
+            <Link to="/privacy" className="hover:text-white transition">
+              Privacy Policy
+            </Link>
+
+            <span>|</span>
+
+            <Link to="/terms" className="hover:text-white transition">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
       </div>

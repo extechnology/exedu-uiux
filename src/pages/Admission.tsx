@@ -225,33 +225,82 @@ export default function Admission() {
           Questions,Comments,Suggestions? Simply fill in the form and we'll be
           in touch shortly
         </p>
-        <div className="flex items-center font-bold justify-center pt-7">
-          <ul className="flex flex-col gap-2">
-            <li className="flex items-start gap-2 text-left ">
-              <FaLocationDot className="relative top-1 text-fuchsia-600" />
-              Room No: 20/884, <br /> Opp. Bus Stand, <br /> Ramanattukara{" "}
-              <br />
-              Kozhikode, <br /> Kerala 673633
-            </li>
-            <li className="flex items-start gap-2 text-left">
-              <FiPhoneCall className="relative top-1 text-fuchsia-600" />
-              <a href="tel:+919072123466" className="hover:text-fuchsia-600 transition-colors">
-                9072123466
-              </a>
-            </li>
-            <li className="flex items-start gap-2 text-left">
-              <FaWhatsapp className="relative top-1 text-fuchsia-600" />
-              <a href="https://wa.me/919562123466" target="_blank" rel="noopener noreferrer" className="hover:text-fuchsia-600 transition-colors">
-                9562123466
-              </a>
-            </li>
-            <li className="flex items-start gap-2 text-left">
-              <IoIosMail className="relative top-1 text-fuchsia-600" />
-              <a href="mailto:exeduone@gmail.com" className="hover:text-fuchsia-600 transition-colors">
-                exeduone@gmail.com
-              </a>
-            </li>
-          </ul>
+        {/* Address Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-6 pt-10 px-4">
+          {/* Head Office */}
+          <div className="border border-gray-200 rounded-lg p-6 text-left">
+            <div className="flex items-center gap-2 mb-4">
+              {/* <span className="uppercase text-xs tracking-widest text-fuchsia-600 font-semibold">
+                Head Office
+                </span> */}
+            </div>
+            <ul className="space-y-1 text-sm text-gray-600 leading-relaxed">
+              <li className="flex items-center gap-2">
+                <FaLocationDot className="text-fuchsia-600 text-lg" />
+                Room No: 20/884,
+              </li>
+              <li className="flex items-center gap-2">
+                Opp. Bus Stand,
+              </li>
+              <li className="flex items-center gap-2">
+                Ramanattukara, Kozhikode
+              </li>
+              <li className="flex items-center gap-2 font-semibold text-gray-700">
+                Kerala : 673633
+              </li>
+            </ul>
+          </div>
+
+          {/* Branch Office */}
+          <div className="border border-gray-200 rounded-lg p-6 text-left">
+            <div className="flex items-center gap-2 mb-4">
+              {/* <span className="uppercase text-xs tracking-widest text-fuchsia-600 font-semibold">
+                Branch Office
+                </span> */}
+            </div>
+            <ul className="space-y-1 text-sm text-gray-600 leading-relaxed">
+              <li className="flex items-center gap-2">
+                <FaLocationDot className="text-fuchsia-600 text-lg" />
+                Unit No: 9, Ground Floor,
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="font-semibold">KINFRA</span> Advanced Technology Park,
+              </li>
+              <li className="flex items-center gap-2">
+                Ramanattukara, Kozhikode
+              </li>
+              <li className="flex items-center gap-2 font-semibold text-gray-700">
+                Kerala : 673631
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Contact Details */}
+        <div className="flex flex-wrap items-center justify-center gap-8 pt-8 pb-2 text-sm font-semibold">
+          <a
+            href="tel:+919072123466"
+            className="flex items-center gap-2 hover:text-fuchsia-600 transition-colors"
+          >
+            <FiPhoneCall className="text-fuchsia-600" />
+            9072123466
+          </a>
+          <a
+            href="https://wa.me/919562123466"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-fuchsia-600 transition-colors"
+          >
+            <FaWhatsapp className="text-fuchsia-600" />
+            9562123466
+          </a>
+          <a
+            href="mailto:exeduone@gmail.com"
+            className="flex items-center gap-2 hover:text-fuchsia-600 transition-colors"
+          >
+            <IoIosMail className="text-fuchsia-600" />
+            exeduone@gmail.com
+          </a>
         </div>
       </div>
     </div>
