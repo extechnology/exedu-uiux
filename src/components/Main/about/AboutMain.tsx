@@ -13,11 +13,15 @@ const AboutMain = () => {
   );
 
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
+  const BACKEND_URL = new URL(
+    import.meta.env.VITE_BACKEND_URL || "https://server.exedu.in"
+  ).origin;
+  const imagePath = aboutImage?.image?.startsWith("/")
+    ? aboutImage.image
+    : `/${aboutImage?.image || ""}`;
   const style: React.CSSProperties = {
     backgroundImage: aboutImage
-      ? `url(${BACKEND_URL}${aboutImage.image})`
+      ? `url(${BACKEND_URL}${imagePath})`
       : "",
   }
   if (loading) return <Loader />;

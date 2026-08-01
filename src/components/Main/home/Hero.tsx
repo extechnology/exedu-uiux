@@ -20,6 +20,7 @@ const Hero = () => {
   if (error) return <div>Error:</div>;
   if (!heroImage) return <div>No image found for this section.</div>;
 
+// console.log(`${BACKEND_URL}/${imagePath}`)
 
   return (
     <div>

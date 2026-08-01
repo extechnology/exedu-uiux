@@ -7,6 +7,10 @@ const AdvancedCourse = () => {
   const { heroCourse, loading, error } = useHeroCourse();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  console.log(backendUrl);
+
+
+
   if (loading) return <Loader />;
   if (error) return <p>{error.message}</p>;
 
@@ -29,14 +33,16 @@ const AdvancedCourse = () => {
         </div>
         {/* use gap instead of space-x and space-y */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-7 pb-10 px-5">
-          {heroCourse?.map((course: HeroCourse) => (
-            <div key={course.id} className="relative overflow-hidden shadow-md">
-              {/* Image */}
-              <img
-                src={backendUrl + course.image}
-                alt={course.title}
-                className="w-full object-cover"
-              />
+          {heroCourse?.map((course: HeroCourse) => {
+            console.log(backendUrl + course.image);
+            return (
+              <div key={course.id} className="relative overflow-hidden shadow-md">
+                {/* Image */}
+                <img
+                  src={backendUrl + course.image}
+                  alt={course.title}
+                  className="w-full object-cover"
+                />
 
               {/* Gradient overlay */}
               <div className="absolute top-0 left-0 w-full h-2/3 bg-gradient-to-b from-black/50 to-transparent" />
@@ -77,7 +83,8 @@ const AdvancedCourse = () => {
                 </Link>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
     </div>

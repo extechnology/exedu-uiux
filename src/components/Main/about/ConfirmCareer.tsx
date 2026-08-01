@@ -8,7 +8,12 @@ function ConfirmCareer() {
     (img: SectionImage) => img.section === "confirm_career"
   );
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const BACKEND_URL = new URL(
+    import.meta.env.VITE_BACKEND_URL || "https://server.exedu.in"
+  ).origin;
+  const imagePath = Career?.image?.startsWith("/")
+    ? Career.image
+    : `/${Career?.image || ""}`;
   if (loading) return <Loader />;
   if (error) return <div>Error: {error.message}</div>;
   if (!Career) return <div>No image found for this section.</div>;
@@ -43,7 +48,7 @@ function ConfirmCareer() {
           className="md:w-1/3 flex md:justify-end px-5 md:px-0 pt-5 md:pt-0"
         >
           <img
-            src={BACKEND_URL + Career.image}
+            src={BACKEND_URL + imagePath}
             alt="no image"
             width={350}
             height={300}

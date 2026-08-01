@@ -8,8 +8,12 @@ const LeadingSolution = () => {
     (img: SectionImage) => img.section === "leading_solution"
   );
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
+  const BACKEND_URL = new URL(
+    import.meta.env.VITE_BACKEND_URL || "https://server.exedu.in"
+  ).origin;
+  const imagePath = LeadingSolution?.image?.startsWith("/")
+    ? LeadingSolution.image
+    : `/${LeadingSolution?.image || ""}`;
   if (loading) {
     return <Loader />;
   }
@@ -26,7 +30,7 @@ const LeadingSolution = () => {
           data-aos-duration="900"
         >
           <img
-            src={BACKEND_URL + LeadingSolution?.image}
+            src={BACKEND_URL + imagePath}
             alt=""
             className="px-5 md:px-0 rounded-md md:rounded-0"
           />
